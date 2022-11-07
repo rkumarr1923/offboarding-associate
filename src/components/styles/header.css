@@ -1,0 +1,25 @@
+.app-header {
+  height: 50px;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 30px;
+  align-items: center;
+  z-index: 999;
+}
+
+.app-title,
+.logout {
+  cursor: pointer;
+  color: #1976d2;
+  font-weight: bold;
+}
+
+.app-title:hover,
+.logout:hover {
+  color: #002d9c;
+}
