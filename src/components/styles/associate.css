@@ -1,0 +1,170 @@
+.associate-form {
+  padding: 20px;
+}
+
+.all-associate-container {
+  width: 100%;
+  display: block;
+  padding-bottom: 120px;
+}
+
+.all-associate-links {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  padding: 20px 20px 20px 10px;
+  cursor: pointer;
+  text-align: center;
+  align-items: center;
+  align-content: center;
+}
+
+.download-icon {
+  padding-top: 20px;
+  font-size: 30px;
+  color: #1976d2;
+  cursor: pointer;
+  padding-right: 10px;
+}
+
+.submit-btn {
+  background-color: #002d9c;
+  color: #fff;
+  border-style: none;
+  padding: 8px 10px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 40px;
+  font-size: 14px;
+  letter-spacing: 0.03rem;
+  margin-left: 5px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.submit-btn:focus,
+.submit-btn:active {
+  background-color: #002d9c;
+}
+
+.submit-btn:hover {
+  background-color: #f2f4f8;
+  border: 1px solid #002d9c;
+  color: #1976d2;
+}
+
+.form-field-1 {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.form-field-2 {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.form-field-3 {
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+
+.import-associate-container {
+  padding-top: 45px;
+}
+
+.top-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.associate-table-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.associate-table-container {
+  padding: 0px 15px 30px 25px;
+}
+
+.reset-filter {
+  background-color: #002d9c !important;
+  color: white !important;
+}
+
+.reset-filter:hover {
+  background-color: #f2f4f8 !important;
+  border: 1px solid #002d9c !important;
+  color: #1976d2 !important;
+}
+
+.import-top {
+  margin-left: 20px;
+}
+
+.import-file {
+  padding-right: 15px;
+}
+
+.import-table {
+  padding: 0px 20px 20px 20px;
+  overflow: auto;
+}
+
+.import-bottom {
+  margin-left: 20px;
+}
+
+.checklist-container {
+  padding: 20px 20px 130px 20px;
+}
+
+.form-label-style {
+  margin-bottom: 0px !important;
+}
+
+.form-group-style {
+  margin-bottom: 20px !important;
+}
+
+.associate-yet-to-be-started {
+  color: gray;
+  font-weight: bold;
+}
+
+.associate-in-progress {
+  color: green;
+  font-weight: bold;
+}
+
+.associate-under-review {
+  color: yellowgreen;
+  font-weight: bold;
+}
+
+.associate-back-in-progress {
+  color: green;
+  font-weight: bold;
+}
+
+.associate-completed {
+  color: blue;
+  font-weight: bold;
+}
+
+.associate-waiting {
+  color: #ff7e00;
+  font-weight: bold;
+}
+
+.associate-blocked {
+  color: red;
+  font-weight: bold;
+}
+
+.comment-container {
+  padding-bottom: 130px;
+  background-color: white;
+}

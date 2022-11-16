@@ -1,0 +1,81 @@
+html, body, #root {
+  height: 100%;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  margin: 0;
+}
+
+body {
+  background-color: #f2f4f8;
+}
+
+.app-container {
+  padding: 50px 0px;
+  height: 100%;
+}
+
+.onboarding-wrapper {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+}
+
+.onboarding-container {
+  height: 100%;
+}
+
+.onboarding-body {
+  height: calc(100% - 50px);
+  overflow-y: auto;
+  background-image: url('../images/background.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  align-content: center;
+  list-style: none;
+  background: #1976d2;
+  padding: 10px 0px;
+  position: static;
+  height: 60px;
+  width: 100%;
+  z-index: 999;
+}
+
+.active-tab a button {
+  background-color: #F2F4F8;
+  border: 1px solid #002d9c;
+  color: #002d9c;
+}
+
+.page-not-found {
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+}
+
+.anchor {
+  cursor: pointer;
+  text-decoration: underline;
+  color: #1976d2;
+  margin-left: 10px;
+}
+
+.d-flex-center {
+  display: flex;
+  justify-content: center;
+}
+
+.d-flex-space {
+  display: flex;
+  justify-content: space-between;
+}

@@ -1,0 +1,62 @@
+.primary-button {
+    background-color: #002d9c;
+    color: #fff;
+    border-style: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    min-height: 40px;
+    font-size: 14px;
+    letter-spacing: 0.03rem;
+    margin-left: 5px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.primary-button:hover {
+    background-color: #F2F4F8;
+    border: 1px solid #002d9c;
+    color: #002d9c;
+}
+
+.form-style {
+    color: #1976d2;
+    box-shadow: 1px 1px #1976d2;
+}
+
+.form-style:focus {
+    color: #1976d2;
+    box-shadow: 0 0 0 0.25rem rgb(0 45 156 255 / 50%);
+}
+
+.date-picker-element {
+    position: relative;
+}
+
+.calendar-element {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    font-size: 25px;
+    color: #1976d2;
+}
+
+.required {
+    color: red;
+}
+
+.error-text {
+    margin-right: 5px;
+}
+
+.form-error {
+    color: red;
+    box-shadow: 2px 2px red;
+}
+
+.form-error:focus {
+    color: red;
+    box-shadow: 1px 1px 5px red;
+}
