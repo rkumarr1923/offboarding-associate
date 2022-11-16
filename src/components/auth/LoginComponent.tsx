@@ -8,10 +8,11 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../store";
+import { LoginRequest, LoginResponse } from "../common/type";
 import "../styles/login.css";
 
 const LoginComponent = () => {
@@ -21,21 +22,22 @@ const LoginComponent = () => {
   const [error, setError] = useState(false);
   const dispatch = useDispatch();
 
-  const handleChange = (e, type) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
     setError(false);
     if (type === "empId") setEmpId(e.target.value);
     else if (type === "pswd") setPswd(e.target.value);
   };
 
   const handleLogin = () => {
-    const requestBody = {
+    const requestBody: LoginRequest = {
       empId: empId,
       password: pswd,
     };
 
     axios
       .post("http://localhost:9099/loginuser/user", requestBody)
-      .then((result) => {
+      .then((result: LoginResponse) => {
+        console.log("result >>>"+JSON.stringify(result))
         if (result.data.token) {
           dispatch(
             login({
@@ -52,50 +54,52 @@ const LoginComponent = () => {
           navigate("/");
         } else setError(true);
 
-        if(empId==="test"){
-          dispatch(
-            login({
-              token: result.token,
-              userDetails: {
-                name: result.data.associateName,
-                role: result.data.associateRole,
-                reviewer: result.data.reviewer,
-                manager: result.data.manager,
-                empId: empId,
-              },
-            })
-          );
-          navigate("/");
-        } else if(empId==="u2m744"){
-          dispatch(
-            login({
-              token: result.token,
-              userDetails: {
-                name: result.data.managerName,
-                role: result.data.managerRole,
-                reviewer: null,
-                manager: null,
-                empId: empId,
-              },
-            })
-          );
-          navigate("/");
-        } else if(empId==="u2r744"){
-          dispatch(
-            login({
-              token: result.token,
-              userDetails: {
-                name: result.data.reviewerName,
-                role: result.data.reviewerRole,
-                reviewer: null,
-                manager: result.data.manager,
-                empId: empId,
-              },
-            })
-          );
-          navigate("/");
-        } else setError(true);
-        
+        navigate("/");
+
+        // if (empId === "test") {
+        //   dispatch(
+        //     login({
+        //       token: result.token,
+        //       userDetails: {
+        //         name: result.data.associateName,
+        //         role: result.data.associateRole,
+        //         reviewer: result.data.reviewer,
+        //         manager: result.data.manager,
+        //         empId: empId,
+        //       },
+        //     })
+        //   );
+        //   navigate("/");
+        // } else if (empId === "u2m744") {
+        //   dispatch(
+        //     login({
+        //       token: result.token,
+        //       userDetails: {
+        //         name: result.data.managerName,
+        //         role: result.data.managerRole,
+        //         reviewer: null,
+        //         manager: null,
+        //         empId: empId,
+        //       },
+        //     })
+        //   );
+        //   navigate("/");
+        // } else if (empId === "u2r744") {
+        //   dispatch(
+        //     login({
+        //       token: result.token,
+        //       userDetails: {
+        //         name: result.data.reviewerName,
+        //         role: result.data.reviewerRole,
+        //         reviewer: null,
+        //         manager: result.data.manager,
+        //         empId: empId,
+        //       },
+        //     })
+        //   );
+        //   navigate("/");
+        // } else setError(true);
+
       });
     // const result = {
     //   token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2MzQ1NTk3NGI0NjFjYzFkNGM1OGRiNTksYXN0aWsxQGdtYWlsLmNvbSIsImlzcyI6Ik9uYm9hcmRpbmcgVGVhbSBJQk0gUHJ1ZGVudGlhbCIsInJvbGVzIjoiUk9MRV9BU1NPQ0lBVEUiLCJpYXQiOjE2Njc1NTcyNjMsImV4cCI6MTY2NzY0MzY2M30.mThdrXC1RtU0eIQvfq_5zJ3fp-DBeTKU_QAoDJ_g_hByPHuHqSqaBfchHBJEXuNnR0COoALJCDR8xiHHq3S22A',
@@ -111,9 +115,9 @@ const LoginComponent = () => {
 
     //   } 
     // }
-    
 
-    
+
+
   };
 
   return (
