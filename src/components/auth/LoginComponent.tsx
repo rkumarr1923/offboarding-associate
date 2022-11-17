@@ -17,6 +17,7 @@ import { login } from "../../store";
 import { LoginRequest, LoginResponse } from "../common/type";
 import "../styles/login.css";
 import { LoginValidationSchema } from "./LoginComponent.validation";
+import { InputText } from "../core/InputText/InputText";
 
 const LoginComponent = () => {
   const navigate = useNavigate();
@@ -154,33 +155,26 @@ const LoginComponent = () => {
               {error && (
                 <p style={{ color: "red" }}>UserName or Password incorrect.</p>
               )}
-              
-                <TextField
-                className="btn-color"
+
+              <InputText
                 autoFocus
-                margin="dense"
                 label="Employee id"
-                type="text"
-                fullWidth
-                variant="standard"
                 value={empId}
                 {...register("empId")}
-                onChange={(e) => handleChange(e, "empId")}
+                onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChange(e, "empId")}
               />
+
               <Typography variant="body2" color="text.secondary">
                 Please enter your IBM employee ID in 6 character. Eg: xxxxxx
               </Typography>
-              <TextField
-                className="btn-color"
-                margin="dense"
+            
+              <InputText
+                autoFocus
                 label="Password"
-                type="password"
-                fullWidth
-                variant="standard"
                 value={pswd}
                 {...register("pswd")}
-                onChange={(e) => handleChange(e, "pswd")}
-              />
+                onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChange(e, "pswd")}
+              />  
               {errors?.pswd?.message}
               
             </>
