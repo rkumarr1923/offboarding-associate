@@ -7,6 +7,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { ChangeEvent, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -14,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../../store";
 import { LoginRequest, LoginResponse } from "../common/type";
 import "../styles/login.css";
+import { LoginValidationSchema } from "./LoginComponent.validation";
 
 const LoginComponent = () => {
   const navigate = useNavigate();
@@ -28,6 +31,14 @@ const LoginComponent = () => {
     else if (type === "pswd") setPswd(e.target.value);
   };
 
+
+  const { register, trigger, handleSubmit, watch, formState: { errors } } = useForm({
+    mode: 'all',
+    resolver: yupResolver(LoginValidationSchema),
+  });
+  const onSubmit = (data: any) => console.log("REACT HOOK FORM DATA ---- >"+JSON.stringify(data));
+
+
   const handleLogin = () => {
     const requestBody: LoginRequest = {
       empId: empId,
@@ -37,7 +48,7 @@ const LoginComponent = () => {
     axios
       .post("http://localhost:9099/loginuser/user", requestBody)
       .then((result: LoginResponse) => {
-        console.log("result >>>"+JSON.stringify(result))
+        
         if (result.data.token) {
           dispatch(
             login({
@@ -117,7 +128,6 @@ const LoginComponent = () => {
     // }
 
 
-
   };
 
   return (
@@ -134,13 +144,18 @@ const LoginComponent = () => {
             <strong>Prudential Retirement</strong>
           </Typography>
         </Grid>
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+                <>
         <Grid item xs={12}>
           <Card>
             <CardContent>
+              <>
               {error && (
                 <p style={{ color: "red" }}>UserName or Password incorrect.</p>
               )}
-              <TextField
+              
+                <TextField
                 className="btn-color"
                 autoFocus
                 margin="dense"
@@ -149,6 +164,7 @@ const LoginComponent = () => {
                 fullWidth
                 variant="standard"
                 value={empId}
+                {...register("empId")}
                 onChange={(e) => handleChange(e, "empId")}
               />
               <Typography variant="body2" color="text.secondary">
@@ -162,21 +178,28 @@ const LoginComponent = () => {
                 fullWidth
                 variant="standard"
                 value={pswd}
+                {...register("pswd")}
                 onChange={(e) => handleChange(e, "pswd")}
               />
+              {errors?.pswd?.message}
+              
+            </>
             </CardContent>
             <CardActions>
               <Button
                 fullWidth
                 variant="contained"
                 className="login-btn"
-                onClick={handleLogin}
+                type="submit"
               >
                 Login
               </Button>
             </CardActions>
           </Card>
+          
         </Grid>
+        </>
+            </form>
       </Grid>
     </div>
   );
