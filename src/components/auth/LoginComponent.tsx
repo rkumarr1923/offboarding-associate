@@ -22,14 +22,14 @@ import { InputText } from "../core/InputText/InputText";
 const LoginComponent = () => {
   const navigate = useNavigate();
   const [empId, setEmpId] = useState("");
-  const [pswd, setPswd] = useState("");
+  const [password, setPswd] = useState("");
   const [error, setError] = useState(false);
   const dispatch = useDispatch();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
     setError(false);
     if (type === "empId") setEmpId(e.target.value);
-    else if (type === "pswd") setPswd(e.target.value);
+    else if (type === "password") setPswd(e.target.value);
   };
 
 
@@ -37,19 +37,12 @@ const LoginComponent = () => {
     mode: 'all',
     resolver: yupResolver(LoginValidationSchema),
   });
-  const onSubmit = (data: any) => console.log("REACT HOOK FORM DATA ---- >"+JSON.stringify(data));
-
-
-  const handleLogin = () => {
-    const requestBody: LoginRequest = {
-      empId: empId,
-      password: pswd,
-    };
-
+  const onSubmit = (data: any) => {
+    console.log("REACT HOOK FORM DATA ---- >"+JSON.stringify(data));
     axios
-      .post("http://localhost:9099/loginuser/user", requestBody)
+      .post("http://localhost:9099/loginuser/user", data)
       .then((result: LoginResponse) => {
-        
+        console.log("result ==== >"+JSON.stringify(result));
         if (result.data.token) {
           dispatch(
             login({
@@ -113,23 +106,8 @@ const LoginComponent = () => {
         // } else setError(true);
 
       });
-    // const result = {
-    //   token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2MzQ1NTk3NGI0NjFjYzFkNGM1OGRiNTksYXN0aWsxQGdtYWlsLmNvbSIsImlzcyI6Ik9uYm9hcmRpbmcgVGVhbSBJQk0gUHJ1ZGVudGlhbCIsInJvbGVzIjoiUk9MRV9BU1NPQ0lBVEUiLCJpYXQiOjE2Njc1NTcyNjMsImV4cCI6MTY2NzY0MzY2M30.mThdrXC1RtU0eIQvfq_5zJ3fp-DBeTKU_QAoDJ_g_hByPHuHqSqaBfchHBJEXuNnR0COoALJCDR8xiHHq3S22A',
-    //   data : {
-    //     associateName:'Astika Mishra',
-    //     associateRole:'ROLE_ASSOCIATE',
-    //     reviewerName:'Arati Patil',
-    //     reviewerRole:'ROLE_ONBOARDING_REVIEWER',
-    //     managerName:'Umapathy',
-    //     managerRole:'ROLE_ONBOARDING_MANAGER',
-    //     reviewer: {"empId":"u2r744","reviewerName":"Arati Patil"},
-    //     manager: {"empId":"u2m747","managerName":"Umapathy"}
 
-    //   } 
-    // }
-
-
-  };
+  } 
 
   return (
     <div className="login-wrapper">
@@ -171,11 +149,11 @@ const LoginComponent = () => {
               <InputText
                 autoFocus
                 label="Password"
-                value={pswd}
-                {...register("pswd")}
-                onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChange(e, "pswd")}
+                value={password}
+                {...register("password")}
+                onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChange(e, "password")}
               />  
-              {errors?.pswd?.message}
+              {errors?.password?.message}
               
             </>
             </CardContent>
