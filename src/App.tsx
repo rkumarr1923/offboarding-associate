@@ -4,6 +4,8 @@ import './App.css';
 
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { userDetails } from "./store";
 import UploadDocument from "./components/document/UploadDocument";
 import Recording from "./components/associate-useful/Recording/RecordingMainComponent";
 import Welcome from "./components/home/Welcome";
@@ -16,7 +18,7 @@ import SampleDocuments from './components/document/SampleDocuments';
 import Offboarding from './views/Offboarding';
 
 function App() {
-  const user = false;
+  const user = useSelector(userDetails);
   return (
     // <div className="App">
     //   <header className="App-header">

@@ -8,8 +8,8 @@ export default function Offboarding() {
   const dispatch = useDispatch();
   const store = useSelector(appStore);
   const { activeTab, userDetails: user } = store || {};
-  const isTabActive = (label) => (activeTab === label ? 'active-tab' : '');
-  const tabClicked = (tab) => dispatch(tabSelected({ tab }));
+  const isTabActive = (label: string) => (activeTab === label ? 'active-tab' : '');
+  const tabClicked = (tab: string) => dispatch(tabSelected({ tab }));
 
   const loginFormRender = () => {
     return (
@@ -41,7 +41,7 @@ export default function Offboarding() {
             <li className={isTabActive('Sample Documents')}>
               <Link to="/sampleDocuments">
                 <Button
-                  label="Sample Documents"
+                  label="Sample Documentsz"
                   clickHandler={() => tabClicked('Sample Documents')}
                 />
               </Link>
