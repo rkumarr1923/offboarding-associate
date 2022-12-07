@@ -29,14 +29,14 @@ const SampleDocuments = () => {
   const [documents, setDocuments] = useState([]);
   const user = useSelector(userDetails);
   const [openSnakBar, setSnakBarOpen] = useState(false);
-  const [options, setOptions] = useState([]);
+  const [options, setOptions] = useState<string[]>([]);
   const [optionselect, setOptionselect] = useState('');
-  const [option, setOption] = useState({});
+  const [option, setOption] = useState<any>({});
   const [inputfile, setInputfile] = useState(false);
   const [uploadStatus, setUploadStatus] = useState(false);
-  const [docTobeUpdate, setDocTobeUpdate] = useState({});
+  const [docTobeUpdate, setDocTobeUpdate] = useState<any>({});
   const [openUpdate, setUpdateDialogStatus] = useState(false);
-  const [docTobeDeleted, setDocIdTobeDeleted] = useState({});
+  const [docTobeDeleted, setDocIdTobeDeleted] = useState<any>({});
   const [open, setDialogStatus] = useState(false);
   const [loader, setLoader] = useState(true);
 
@@ -75,9 +75,9 @@ const SampleDocuments = () => {
       .get(BASE_URL+'document/sample', {
         headers: { Authorization: 'Bearer ' + userToken },
       })
-      .then((res) => {
+      .then((res: any) => {
         setOptions([...res.data]);
-        setOption(res.data.filter(obj=> obj.id===0)[0]);
+        setOption(res.data.filter((obj: { id: number; })=> obj.id===0)[0]);
         setOptionselect('0');
       })
       .catch((err) => {
@@ -85,11 +85,11 @@ const SampleDocuments = () => {
       });
   };
 
-  const optionChanged = (childData) => {
+  const optionChanged = (childData: React.SetStateAction<string>) => {
     setOptionselect(childData);
   };
 
-  const fileUpload = (event) => {
+  const fileUpload = () => {
     setInputfile(true);
   };
 
@@ -98,10 +98,11 @@ const SampleDocuments = () => {
   };
 
   const openUpdateDialog = () => {
-    const updateFileName = document.getElementById('myfile').files[0].name;
+    const yy: any = document.getElementById('myfile');
+    const updateFileName: any = yy.files[0].name;
     if (optionselect === '0') {
       const filteredObj = documents.filter(
-        (obj) =>
+        (obj: any) =>
           obj.documentType.id === parseInt(optionselect) &&
           obj.name === updateFileName
       );
@@ -113,7 +114,7 @@ const SampleDocuments = () => {
       }
     } else {
       const filteredObj = documents.filter(
-        (obj) => obj.documentType.id === parseInt(optionselect)
+        (obj: any) => obj.documentType.id === parseInt(optionselect)
       );
       if (filteredObj && filteredObj.length > 0) {
         setDocTobeUpdate(filteredObj[0]);
@@ -125,7 +126,7 @@ const SampleDocuments = () => {
   };
 
   const callUploadAPI = () => {
-    var input = document.getElementById('myfile');
+    var input: any = document.getElementById('myfile');
     const jsonData = {
       document_type: optionselect,
       employeeId: user.empId,
@@ -168,12 +169,13 @@ const SampleDocuments = () => {
   };
 
   const resetFields = () => {
-    document.getElementById('myfile').value = '';
+    const tt= document.getElementById('myfile') as any;
+    tt.value = '';
     setOptionselect('0');
     setInputfile(false);
   };
 
-  const download = (id, name) => {
+  const download = (id: any, name: string) => {
     axios
       .get(BASE_URL+`files/${id}`, { headers: { Authorization: 'Bearer ' + userToken }, responseType: 'blob' })
       .then((result) => {
@@ -193,7 +195,7 @@ const SampleDocuments = () => {
       });
   };
 
-  const openDialog = (doc) => {
+  const openDialog = (doc: any) => {
     setDocIdTobeDeleted(doc);
     setDialogStatus(true);
   };
@@ -202,7 +204,7 @@ const SampleDocuments = () => {
     setDialogStatus(false);
   };
 
-  const deleteDocs = (id) => {
+  const deleteDocs = (id: any) => {
     // const deleteUrl = 'newURLForDelete';
     // axios
     //   .delete(deleteUrl+`${id}`)
@@ -298,7 +300,7 @@ const SampleDocuments = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {documents.map((doc, i) => (
+                  {documents.map((doc: any, i) => (
                     <TableRow
                       key={i}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
