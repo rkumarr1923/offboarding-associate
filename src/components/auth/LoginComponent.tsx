@@ -37,6 +37,8 @@ const LoginComponent = () => {
     mode: 'all',
     resolver: yupResolver(LoginValidationSchema),
   });
+
+  
   const onSubmit = (data: any) => {
     console.log("REACT HOOK FORM DATA ---- >"+JSON.stringify(data));
     axios
@@ -147,7 +149,6 @@ const LoginComponent = () => {
               </Typography>
             
               <InputText
-                autoFocus
                 label="Password"
                 value={password}
                 {...register("password")}

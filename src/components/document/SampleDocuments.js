@@ -7,7 +7,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { userDetails } from '../../store';
+import { token, userDetails } from '../../store';
 import { useSelector } from 'react-redux';
 import TableContainer from '@mui/material/TableContainer';
 import Table from '@mui/material/Table';
@@ -24,6 +24,8 @@ import './UploadDocument.css';
 import Loader from '../common/Loader';
 
 const SampleDocuments = () => {
+  const BASE_URL = 'http://localhost:9003/';
+  const userToken = useSelector(token);
   const [documents, setDocuments] = useState([]);
   const user = useSelector(userDetails);
   const [openSnakBar, setSnakBarOpen] = useState(false);
@@ -44,14 +46,43 @@ const SampleDocuments = () => {
   }, []);
 
   const fetchDocuments = () => {
-    setDocuments([]);
-    setLoader(false);
+    // const docs = [{"id":"doc001", "name":"Beekeeper.jpg" , "documentType":{"id":0,"name":"Sample Documents"}},
+    // {"id":"doc002", "name":"Checklist.doc" , "documentType":{"id":0,"name":"Sample Documents"}}
+    // ];
+    // setDocuments(docs);
+    // setLoader(false);
+
+    axios
+      .get(BASE_URL+'files/sampledoc', {
+        headers: { Authorization: 'Bearer ' + userToken },
+      })
+      .then((res) => {
+        setDocuments(res.data);
+        setLoader(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    
   };
 
   const fetchDocumentTypes = () => {
-    const response = [{"id":0,"name":"Sample Documents"},{"id":1,"name":"Select"}];
-    setOptions([...response]);
-    setOption(response.filter(obj=> obj.id===0)[0]);
+    // const response = [{"id":0,"name":"Sample Documents"},{"id":1,"name":"Select"}];
+    // setOptions([...response]);
+    // setOption(response.filter(obj=> obj.id===0)[0]);
+
+    axios
+      .get(BASE_URL+'document/sample', {
+        headers: { Authorization: 'Bearer ' + userToken },
+      })
+      .then((res) => {
+        setOptions([...res.data]);
+        setOption(res.data.filter(obj=> obj.id===0)[0]);
+        setOptionselect('0');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const optionChanged = (childData) => {
@@ -110,26 +141,26 @@ const SampleDocuments = () => {
       body: formdata,
       redirect: 'follow',
     };
-    // const uploadUrl = 'urlForUploadFiles';
-    // axios
-    //   .post(uploadUrl, formdata, {
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data',
-    //     },
-    //   })
-    //   .then((result) => {
-    //     updateDialogClose();
-    //     setSnakBarOpen(true);
-    //     setUploadStatus(true);
-    //     fetchDocuments();
-    //     resetFields();
-    //     //console.log(result);
-    //   })
-    //   .catch((error) => {
-    //     setSnakBarOpen(true);
-    //     setUploadStatus(false);
-    //     console.log('Error while uploading', error);
-    //   });
+    axios
+      .post(BASE_URL+'files', formdata, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization':'Bearer '+userToken
+        },
+      })
+      .then((result) => {
+        updateDialogClose();
+        setSnakBarOpen(true);
+        setUploadStatus(true);
+        fetchDocuments();
+        resetFields();
+        //console.log(result);
+      })
+      .catch((error) => {
+        setSnakBarOpen(true);
+        setUploadStatus(false);
+        console.log('Error while uploading', error);
+      });
   };
 
   const updateDialogClose = () => {
@@ -143,24 +174,23 @@ const SampleDocuments = () => {
   };
 
   const download = (id, name) => {
-    // const downloadUrl = 'newUrlForDownload';
-    // axios
-    //   .get(downloadUrl+`${id}`, { responseType: 'blob' })
-    //   .then((result) => {
-    //     //console.log(result);
-    //     if (result) {
-    //       const file = new Blob([result.data], { type: 'application/pdf' });
-    //       const fileURL = URL.createObjectURL(file);
-    //       var a = document.createElement('a');
-    //       a.href = fileURL;
-    //       a.download = name;
-    //       document.body.appendChild(a);
-    //       a.click();
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error('There was an error!', error);
-    //   });
+    axios
+      .get(BASE_URL+`files/${id}`, { headers: { Authorization: 'Bearer ' + userToken }, responseType: 'blob' })
+      .then((result) => {
+        //console.log(result);
+        if (result) {
+          const file = new Blob([result.data], { type: 'application/pdf' });
+          const fileURL = URL.createObjectURL(file);
+          var a = document.createElement('a');
+          a.href = fileURL;
+          a.download = name;
+          document.body.appendChild(a);
+          a.click();
+        }
+      })
+      .catch((error) => {
+        console.error('There was an error!', error);
+      });
   };
 
   const openDialog = (doc) => {
