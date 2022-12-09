@@ -11,13 +11,16 @@ import Alert from '@mui/material/Alert';
 import axios from 'axios';
 import './UploadDocument.css';
 import SelectBox from '../core/Select';
-import { userDetails } from '../../store';
+import { token, userDetails } from '../../store';
 import { useSelector } from 'react-redux';
 import DocumentTable from './DocumentTable';
 import Loader from '../common/Loader';
 
 const UploadDocument = () => {
+  const BASE_URL = 'http://localhost:9003/';
+  const userToken = useSelector(token);
   const location = useLocation();
+  console.log("location >>>> "+JSON.stringify(location))
   const { forAssociate } = location.state;
   const [documents, setDocuments] = useState([]);
   const [openSnakBar, setSnakBarOpen] = useState(false);
@@ -65,30 +68,31 @@ const UploadDocument = () => {
       body: formdata,
       redirect: 'follow',
     };
-    // const uploadUrl = 'urlForUploadFiles';
-    // axios
-    //   .post(uploadUrl, formdata, {
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data',
-    //     },
-    //   })
-    //   .then((result) => {
-    //     updateDialogClose();
-    //     setSnakBarOpen(true);
-    //     setUploadStatus(true);
-    //     if (user.role === 'ROLE_ASSOCIATE') {
-    //       childRefNonReviewed.current.fetchChildDocuments();
-    //     } else {
-    //       childRefReviewed.current.fetchChildDocuments();
-    //     }
-    //     resetFields();
-    //     //console.log(result);
-    //   })
-    //   .catch((error) => {
-    //     setSnakBarOpen(true);
-    //     setUploadStatus(false);
-    //     console.log('Error while uploading', error);
-    //   });
+    const uploadUrl = `${BASE_URL}files`;
+    axios
+      .post(uploadUrl, formdata, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization':'Bearer '+userToken
+        },
+      })
+      .then((result) => {
+        updateDialogClose();
+        setSnakBarOpen(true);
+        setUploadStatus(true);
+        if (user.role === 'ROLE_ASSOCIATE') {
+          childRefNonReviewed.current.fetchChildDocuments();
+        } else {
+          childRefReviewed.current.fetchChildDocuments();
+        }
+        resetFields();
+        //console.log(result);
+      })
+      .catch((error) => {
+        setSnakBarOpen(true);
+        setUploadStatus(false);
+        console.log('Error while uploading', error);
+      });
   };
 
   const fileUpload = (event) => {
@@ -103,10 +107,18 @@ const UploadDocument = () => {
 
   const fetchDocumentTypes = () => {
     const role = user.role;
-    const response = [{"id":1,"name":"Select"},{"id":2,"name":"BEEKEEPER"},{"id":3,"name":"Checkpoint Goals"},{"id":5,"name":"Day-1 - Skills Tracker"},{"id":6,"name":"Email Confirmation"},{"id":7,"name":"On boarding Checklist"},{"id":8,"name":"Prudential Delivery - Digital KT Plan"},{"id":9,"name":"Prudential New colleague"},{"id":10,"name":"Training"},{"id":4,"name":"Day-1 - Non_Disclosure"}];
-    setOptions([...response]);
-    setOptionselect('1');
-    setLoader(false);
+    console.log("role >>>>> "+role);
+    axios
+      .get(BASE_URL+'document',{headers: { Authorization: 'Bearer ' + userToken }})
+      .then((res) => {
+        console.log("res >>>>> "+JSON.stringify(res));
+        setOptions([...res.data]);
+        setOptionselect('1');
+        setLoader(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const optionChanged = (childData) => {
@@ -235,7 +247,7 @@ const UploadDocument = () => {
         ref={childRefNonReviewed}
         type="NOTREVIEWED"
         title="Documents:"
-        fetchDocumentURL="fetchDocumentURL"
+        fetchDocumentURL="http://localhost:9003/files/employee"
       />
 
       {user.role !== 'ROLE_ASSOCIATE' && (
@@ -246,7 +258,7 @@ const UploadDocument = () => {
           ref={childRefReviewed}
           type="REVIEWED"
           title="Reviewed Documents:"
-          fetchDocumentURL="fetchDocumentURL"
+          fetchDocumentURL="http://localhost:9003/files/reviewer"
         />
       )}
 

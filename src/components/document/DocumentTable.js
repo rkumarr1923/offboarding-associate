@@ -20,11 +20,12 @@ import Paper from '@mui/material/Paper';
 import axios from 'axios';
 import './UploadDocument.css';
 import { Typography } from '@mui/material';
-import { userDetails } from '../../store';
+import { token, userDetails } from '../../store';
 import { useSelector } from 'react-redux';
 import Loader from '../common/Loader';
 
 const DocumentTable = forwardRef((props, ref) => {
+  const userToken = useSelector(token);
   const [documents, setDocuments] = useState([]);
   const [open, setDialogStatus] = useState(false);
   const [docTobeDeleted, setDocIdTobeDeleted] = useState({});
@@ -60,112 +61,112 @@ const DocumentTable = forwardRef((props, ref) => {
       user.role === 'ROLE_ASSOCIATE' ? user.empId : props.forAssociate.empId;
     const reviewerId = user.role === 'ROLE_ASSOCIATE' ? '' : user.empId;
     var url = props.fetchDocumentURL ? props.fetchDocumentURL : '';
+    
     if (props.type === 'REVIEWED') {
       url = url + `/${reviewerId}/employee/${id}`;
     } else {
       url = url + `/${id}`;
     }
-    // axios
-    //   .get(url)
-    //   .then((res) => {
-    //     //console.log(res.data);
-    //     setDocuments(res.data);
-    //     const filteredObj = res.data.filter((obj) => obj.reviewed === true);
-    //     if (filteredObj.length > 0) {
-    //       setIsReviewed(true);
-    //     } else {
-    //       setIsReviewed(false);
-    //     }
-    //     if (props.type === 'REVIEWED') {
-    //       props.onSyncDocuments({
-    //         revieweddocuments: res.data,
-    //         isReviewed: filteredObj.length > 0 ? true : false,
-    //       });
-    //     } else {
-    //       props.onSyncDocuments({ documents: res.data });
-    //     }
-    //     setLoader(false);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-    setLoader(false);
+    axios
+      .get(url,{headers: { Authorization: 'Bearer ' + userToken },})
+      .then((res) => {
+        //console.log(res.data);
+        setDocuments(res.data);
+        const filteredObj = res.data.filter((obj) => obj.reviewed === true);
+        if (filteredObj.length > 0) {
+          setIsReviewed(true);
+        } else {
+          setIsReviewed(false);
+        }
+        if (props.type === 'REVIEWED') {
+          props.onSyncDocuments({
+            revieweddocuments: res.data,
+            isReviewed: filteredObj.length > 0 ? true : false,
+          });
+        } else {
+          props.onSyncDocuments({ documents: res.data });
+        }
+        setLoader(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const download = (id, name) => {
     const url = props.downloadURL
       ? props.downloadURL
-      : `downloadURL/${id}`;
-    // axios
-    //   .get(url, { responseType: 'blob' })
-    //   .then((result) => {
-    //     //console.log(result);
-    //     if (result) {
-    //       const file = new Blob([result.data], { type: 'application/pdf' });
-    //       const fileURL = URL.createObjectURL(file);
-    //       var a = document.createElement('a');
-    //       a.href = fileURL;
-    //       a.download = name;
-    //       document.body.appendChild(a);
-    //       a.click();
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error('There was an error!', error);
-    //   });
+      : `http://localhost:9003/files/${id}`;
+    axios
+      .get(url, { headers: { Authorization: 'Bearer ' + userToken }, responseType: 'blob' })
+      .then((result) => {
+        //console.log(result);
+        if (result) {
+          const file = new Blob([result.data], { type: 'application/pdf' });
+          const fileURL = URL.createObjectURL(file);
+          var a = document.createElement('a');
+          a.href = fileURL;
+          a.download = name;
+          document.body.appendChild(a);
+          a.click();
+        }
+      })
+      .catch((error) => {
+        console.error('There was an error!', error);
+      });
   };
 
   const deleteDocs = (id) => {
     const url = props.deleteURL
       ? props.deleteURL
-      : `deleteURL/${id}`;
-    // axios
-    //   .delete(url)
-    //   .then((result) => {
-    //     setDialogStatus(false);
-    //     fetchDocuments();
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+      : `http://localhost:9003/files/delete/${id}`;
+    axios
+      .delete(url,{headers: { Authorization: 'Bearer ' + userToken },})
+      .then((result) => {
+        setDialogStatus(false);
+        fetchDocuments();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const submitReviewed = () => {
     const id =
       user.role === 'ROLE_ASSOCIATE' ? user.empId : props.forAssociate.empId;
     const reviewerId = user.role === 'ROLE_ASSOCIATE' ? '' : user.empId;
-    // axios
-    //   .put(`UrlToSubmitReviewed/${reviewerId}/employee/${id}`)
-    //   .then((result) => {
-    //     setDialogStatus(false);
-    //     fetchDocuments();
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    axios
+      .put(`http://localhost:9003/files/reviewer/${reviewerId}/employee/${id}`,{headers: { Authorization: 'Bearer ' + userToken },})
+      .then((result) => {
+        setDialogStatus(false);
+        fetchDocuments();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const downloadDocsForAsso = () => {
     const id =
       user.role === 'ROLE_ASSOCIATE' ? user.empId : props.forAssociate.empId;
     const reviewerId = user.role === 'ROLE_ASSOCIATE' ? '' : user.empId;
-    const url = `downloadDocsForAssoURL`;
-    // axios
-    //   .get(url, { responseType: 'blob' })
-    //   .then((result) => {
-    //     if (result) {
-    //       const file = new Blob([result.data], { type: 'application/pdf' });
-    //       const fileURL = URL.createObjectURL(file);
-    //       var a = document.createElement('a');
-    //       a.href = fileURL;
-    //       a.download = 'Onboarding_' + id + '.ZIP';
-    //       document.body.appendChild(a);
-    //       a.click();
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error('There was an error!', error);
-    //   });
+    const url = `http://localhost:9003/files/reviewer/${reviewerId}/employee/${id}/zip`;
+    axios
+      .get(url, { headers: { Authorization: 'Bearer ' + userToken },responseType: 'blob' })
+      .then((result) => {
+        if (result) {
+          const file = new Blob([result.data], { type: 'application/pdf' });
+          const fileURL = URL.createObjectURL(file);
+          var a = document.createElement('a');
+          a.href = fileURL;
+          a.download = 'Onboarding_' + id + '.ZIP';
+          document.body.appendChild(a);
+          a.click();
+        }
+      })
+      .catch((error) => {
+        console.error('There was an error!', error);
+      });
   };
 
   return loader ? (

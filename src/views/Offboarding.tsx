@@ -10,7 +10,7 @@ export default function Offboarding() {
   const { activeTab, userDetails: user } = store || {};
   const isTabActive = (label: string) => (activeTab === label ? 'active-tab' : '');
   const tabClicked = (tab: string) => dispatch(tabSelected({ tab }));
-
+ 
   const loginFormRender = () => {
     return (
       <ul className="nav-links">
@@ -34,6 +34,14 @@ export default function Offboarding() {
                   />
                 </Link>
               </li>
+              <li className={isTabActive('Upload Documents')}>
+              <Link to="/uploadDocuments" state={{ forAssociate: { empId: user.empId } }}>
+                <Button
+                  label="Upload Documents"
+                  clickHandler={() => tabClicked('Upload Documents')}
+                />
+              </Link>
+            </li>
             </>
           )}
         {user && user.role === 'ROLE_ASSOCIATE' && (
