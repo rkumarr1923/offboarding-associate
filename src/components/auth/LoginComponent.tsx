@@ -18,6 +18,7 @@ import { LoginRequest, LoginResponse } from "../common/type";
 import "../styles/login.css";
 import { LoginValidationSchema } from "./LoginComponent.validation";
 import { InputText } from "../core/InputText/InputText";
+import React from "react";
 
 const LoginComponent = () => {
   const navigate = useNavigate();

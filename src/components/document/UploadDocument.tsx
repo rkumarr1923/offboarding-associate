@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, ChangeEvent } from 'react';
 import { useLocation } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -15,6 +15,13 @@ import { token, userDetails } from '../../store';
 import { useSelector } from 'react-redux';
 import DocumentTable from './DocumentTable';
 import Loader from '../common/Loader';
+import { FilterUploadDocumentValidationSchema } from './FilterUploadDocument.validation';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import { Card, CardActions, CardContent, Grid, Typography } from '@mui/material';
+import { error } from 'console';
+import { InputText } from '../core/InputText/InputText';
+import NewSelectBox from '../core/NewSelect';
 
 const UploadDocument = () => {
   const BASE_URL = 'http://localhost:9003/';
@@ -25,8 +32,11 @@ const UploadDocument = () => {
   const [documents, setDocuments] = useState([]);
   const [openSnakBar, setSnakBarOpen] = useState(false);
   const [uploadStatus, setUploadStatus] = useState(false);
-  const [options, setOptions] = useState([]);
+  const [options, setOptions] = useState<string[]>([]);
+  const [assocaiteList, setAssocaiteList] = useState<any>([]);
   const [optionselect, setOptionselect] = useState('');
+  const [allAssoOptionSelect, setAllAssoOptionSelect] = useState('');
+  
   const [inputfile, setInputfile] = useState(false);
   const [isReviewed, setIsReviewed] = useState(false);
   const [docTobeUpdate, setDocTobeUpdate] = useState({});
@@ -42,15 +52,26 @@ const UploadDocument = () => {
   //   manager: {empId: 'manager1', managerName: 'Arindam'}, empId: '000U2M747'
   // });
 
-  const childRefReviewed = useRef(null);
-  const childRefNonReviewed = useRef(null);
+  const childRefReviewed = useRef<any>(null);
+  const childRefNonReviewed = useRef<any>(null);
+
+  const [empId, setEmpId] = useState("");
+  const [password, setPswd] = useState("");
+  const [error, setError] = useState(false);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
+    setError(false);
+    if (type === "empId") setEmpId(e.target.value);
+    else if (type === "password") setPswd(e.target.value);
+  };
 
   useEffect(() => {
     fetchDocumentTypes();
+    fetchAllAssociates();
   }, []);
 
   const callUploadAPI = () => {
-    var input = document.getElementById('myfile');
+    var input: any  = document.getElementById('myfile');
     //console.log("inputFileElement.value", input.files[0]);
 
     const jsonData = {
@@ -61,6 +82,7 @@ const UploadDocument = () => {
       reviewerId: user.role === 'ROLE_ASSOCIATE' ? '' : user.empId,
     };
     var formdata = new FormData();
+
     formdata.append('file', input.files[0], input.files[0].name);
     formdata.append('data', JSON.stringify(jsonData));
     var requestOptions = {
@@ -76,14 +98,14 @@ const UploadDocument = () => {
           'Authorization':'Bearer '+userToken
         },
       })
-      .then((result) => {
+      .then((result: any) => {
         updateDialogClose();
         setSnakBarOpen(true);
         setUploadStatus(true);
         if (user.role === 'ROLE_ASSOCIATE') {
-          childRefNonReviewed.current.fetchChildDocuments();
+          childRefNonReviewed.current?.fetchChildDocuments();
         } else {
-          childRefReviewed.current.fetchChildDocuments();
+          childRefReviewed.current?.fetchChildDocuments();
         }
         resetFields();
         //console.log(result);
@@ -95,7 +117,7 @@ const UploadDocument = () => {
       });
   };
 
-  const fileUpload = (event) => {
+  const fileUpload = (event: any) => {
     //let changedFile = event.target.files[0];
     let uploadedFiles = event.target.files;
     setInputfile(true);
@@ -110,7 +132,7 @@ const UploadDocument = () => {
     console.log("role >>>>> "+role);
     axios
       .get(BASE_URL+'document',{headers: { Authorization: 'Bearer ' + userToken }})
-      .then((res) => {
+      .then((res: any) => {
         console.log("res >>>>> "+JSON.stringify(res));
         setOptions([...res.data]);
         setOptionselect('1');
@@ -121,20 +143,43 @@ const UploadDocument = () => {
       });
   };
 
-  const optionChanged = (childData) => {
+
+  const fetchAllAssociates = () => {
+    
+    axios
+      .get("http://localhost:9092/pru-associate/get-all-associates", {headers: { Authorization: 'Bearer ' + userToken }})
+      .then((result: any) => {
+        console.log("result ==== >"+JSON.stringify(result));
+        
+        setAssocaiteList([...result.data]);
+        setAllAssoOptionSelect('1');
+        setLoader(false);
+
+      });
+
+  } 
+
+  const allAssociatesOptionChanged = (childData: any) => {
+    setAllAssoOptionSelect(childData);
+  };
+
+  const optionChanged = (childData: any) => {
     setOptionselect(childData);
   };
 
   const resetFields = () => {
-    document.getElementById('myfile').value = '';
+    var input: any = document.getElementById('myfile');
+    input.value = '';
+
     setOptionselect('1');
     setInputfile(false);
   };
 
   const openUpdateDialog = () => {
-    const updateFileName = document.getElementById('myfile').files[0].name;
+    const yy: any = document.getElementById('myfile');
+    const updateFileName = yy.files[0].name;
     //var filteredObj = [];
-    var isPopupDisplay = false;
+    var isPopupDisplay: boolean | undefined = false;
     if (user.role === 'ROLE_ASSOCIATE') {
       isPopupDisplay = validateUploadFile(documents, updateFileName);
     } else {
@@ -151,17 +196,17 @@ const UploadDocument = () => {
     }
   };
 
-  const validateUploadFile = (documentList, updateFileName) => {
+  const validateUploadFile = (documentList: any, updateFileName: any) => {
     var filteredObj = [];
     const fileName = updateFileName.substring(0, updateFileName.lastIndexOf("."));
-    filteredObj = documentList.filter(obj => (obj.documentType.id===parseInt(optionselect)));
+    filteredObj = documentList.filter((obj: any) => (obj.documentType.id===parseInt(optionselect)));
     if(filteredObj && filteredObj.length>0) {
       //var filteredObj1 = documentList.filter(obj => (obj.documentType.id===parseInt(optionselect) && obj.name===updateFileName));
-      var filteredObj1 = documentList.filter(obj => (obj.documentType.id===parseInt(optionselect) && obj.name.substring(0, obj.name.lastIndexOf(".")) === fileName));
+      var filteredObj1 = documentList.filter((obj: any) => (obj.documentType.id===parseInt(optionselect) && obj.name.substring(0, obj.name.lastIndexOf(".")) === fileName));
       if(filteredObj1 && filteredObj1.length>0) {
         return setIsPopupDisplay(filteredObj1[0], true);
       } else {
-        filteredObj1 = documentList.filter(obj => (obj.name.substring(0, obj.name.lastIndexOf(".")) === fileName));
+        filteredObj1 = documentList.filter((obj: any) => (obj.name.substring(0, obj.name.lastIndexOf(".")) === fileName));
         if(filteredObj1 && filteredObj1.length>0) {
           return setIsPopupDisplay(filteredObj1[0], false);
         } else {
@@ -170,14 +215,14 @@ const UploadDocument = () => {
       }
     } else {
       //filteredObj = documentList.filter(obj => (obj.name===updateFileName));
-      filteredObj = documentList.filter(obj => (obj.name.substring(0, obj.name.lastIndexOf(".")) === fileName));
+      filteredObj = documentList.filter((obj: any) => (obj.name.substring(0, obj.name.lastIndexOf(".")) === fileName));
       if(filteredObj && filteredObj.length>0) {
         return setIsPopupDisplay(filteredObj[0], false);
       }
     }
   }
 
-  const setIsPopupDisplay = (fileObj, isDocTypePopup) => {
+  const setIsPopupDisplay = (fileObj: any, isDocTypePopup: any) => {
     if(isDocTypePopup){
       //setUpdatePopupMessage(fileObj.name+" of type "+fileObj.documentType.name+" already exists. Do you want to replace it?");
       setUpdatePopupMessage(fileObj.documentType.name+" type document already exists. Do you want to replace it?");
@@ -194,7 +239,7 @@ const UploadDocument = () => {
     setUpdateDialogStatus(false);
   };
 
-  const syncDocuments = (documents) => {
+  const syncDocuments = (documents: any) => {
     if (documents.documents) {
       setDocuments(documents.documents);
     } else {
@@ -202,6 +247,28 @@ const UploadDocument = () => {
       setIsReviewed(documents.isReviewed);
     }
   };
+
+
+  const { register, trigger, handleSubmit, watch, formState: { errors } } = useForm({
+    mode: 'all',
+    resolver: yupResolver(FilterUploadDocumentValidationSchema),
+  });
+
+  
+  const onSubmit = (data: any) => {
+    console.log("REACT HOOK FORM DATA ---- >"+JSON.stringify(data));
+    // axios
+    //   .get("http://localhost:9092/pru-associate/get-all-associates", {headers: { Authorization: 'Bearer ' + userToken }})
+    //   .then((result: any) => {
+    //     console.log("result ==== >"+JSON.stringify(result));
+        
+    //     setAssocaiteList([...result.data]);
+    //     // setOptionselect('1');
+    //     setLoader(false);
+
+    //   });
+
+  } 
 
   return loader ? (
     <Loader />
@@ -241,6 +308,72 @@ const UploadDocument = () => {
           </Button>
         </div>
       </div>
+
+      <form onSubmit={handleSubmit(onSubmit)}>
+                <>
+
+                <h2>Find Associate</h2>
+      <div className="input-fieldbox">
+        <div className="input-select">
+          {' '}
+          Select Associate:&nbsp;
+          <NewSelectBox
+            options={assocaiteList}
+            onOptionChanged={allAssociatesOptionChanged}
+            optionselect={allAssoOptionSelect}
+          />
+        </div>{' '}
+        &nbsp;
+      </div>
+
+      
+        <Grid item xs={6}>
+          <Card>
+            <CardContent>
+              <>
+              {error && (
+                <p style={{ color: "red" }}>UserName or Password incorrect.</p>
+              )}
+
+              <InputText
+                autoFocus
+                label="Employee id"
+                value={empId}
+                {...register("empId")}
+                onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChange(e, "empId")}
+              />
+
+              <Typography variant="body2" color="text.secondary">
+                Please enter your IBM employee ID in 6 character. Eg: xxxxxx
+              </Typography>
+            
+              <InputText
+                label="Password"
+                value={password}
+                {...register("password")}
+                onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChange(e, "password")}
+              />  
+              {errors?.password?.message}
+              
+            </>
+            </CardContent>
+            <CardActions>
+              <Button
+                fullWidth
+                variant="contained"
+                className="login-btn"
+                type="submit"
+              >
+                Login
+              </Button>
+            </CardActions>
+          </Card>
+          
+        </Grid>
+        </>
+            </form>
+
+            
       <DocumentTable
         forAssociate={forAssociate}
         onSyncDocuments={syncDocuments}

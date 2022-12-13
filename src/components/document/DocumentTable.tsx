@@ -24,11 +24,11 @@ import { token, userDetails } from '../../store';
 import { useSelector } from 'react-redux';
 import Loader from '../common/Loader';
 
-const DocumentTable = forwardRef((props, ref) => {
+const DocumentTable = forwardRef((props: any, ref) => {
   const userToken = useSelector(token);
   const [documents, setDocuments] = useState([]);
   const [open, setDialogStatus] = useState(false);
-  const [docTobeDeleted, setDocIdTobeDeleted] = useState({});
+  const [docTobeDeleted, setDocIdTobeDeleted] = useState<any>({});
   const [isReviewed, setIsReviewed] = useState(false);
   const user = useSelector(userDetails);
   const [loader, setLoader] = useState(true);
@@ -51,7 +51,7 @@ const DocumentTable = forwardRef((props, ref) => {
     setDialogStatus(false);
   };
 
-  const openDialog = (doc) => {
+  const openDialog = (doc: any) => {
     setDocIdTobeDeleted(doc);
     setDialogStatus(true);
   };
@@ -69,10 +69,10 @@ const DocumentTable = forwardRef((props, ref) => {
     }
     axios
       .get(url,{headers: { Authorization: 'Bearer ' + userToken },})
-      .then((res) => {
+      .then((res: any) => {
         //console.log(res.data);
         setDocuments(res.data);
-        const filteredObj = res.data.filter((obj) => obj.reviewed === true);
+        const filteredObj = res.data.filter((obj: any) => obj.reviewed === true);
         if (filteredObj.length > 0) {
           setIsReviewed(true);
         } else {
@@ -93,7 +93,7 @@ const DocumentTable = forwardRef((props, ref) => {
       });
   };
 
-  const download = (id, name) => {
+  const download = (id: any, name: any) => {
     const url = props.downloadURL
       ? props.downloadURL
       : `http://localhost:9003/files/${id}`;
@@ -116,7 +116,7 @@ const DocumentTable = forwardRef((props, ref) => {
       });
   };
 
-  const deleteDocs = (id) => {
+  const deleteDocs = (id: any) => {
     const url = props.deleteURL
       ? props.deleteURL
       : `http://localhost:9003/files/delete/${id}`;
@@ -153,7 +153,7 @@ const DocumentTable = forwardRef((props, ref) => {
     const url = `http://localhost:9003/files/reviewer/${reviewerId}/employee/${id}/zip`;
     axios
       .get(url, { headers: { Authorization: 'Bearer ' + userToken },responseType: 'blob' })
-      .then((result) => {
+      .then((result: any) => {
         if (result) {
           const file = new Blob([result.data], { type: 'application/pdf' });
           const fileURL = URL.createObjectURL(file);
@@ -219,7 +219,7 @@ const DocumentTable = forwardRef((props, ref) => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {documents.map((doc, i) => (
+                    {documents.map((doc: any, i) => (
                       <TableRow
                         key={i}
                         sx={{
