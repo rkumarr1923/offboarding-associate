@@ -29,3 +29,22 @@ export type LoginResponse={
     }
     
 }
+
+export interface DropdownType {
+    label: string;
+    autoFocus?: boolean;
+    name: string;
+    renderValue?: any;
+    error: any;
+    onChange: any;
+    helperText: any;
+    options: Record<string, any>;
+}
+
+export interface TextareaType {
+    label: string;
+    autoFocus?: boolean;
+    name: string;
+    error: any;
+    helperText: any;
+}

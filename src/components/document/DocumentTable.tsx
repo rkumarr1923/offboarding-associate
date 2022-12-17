@@ -56,9 +56,17 @@ const DocumentTable = forwardRef((props: any, ref) => {
     setDialogStatus(true);
   };
 
+  const getIdByRole=(): string =>{
+    // const id =
+    //   user.role === 'ROLE_ASSOCIATE' ? user.empId : props.forAssociate.empId;
+
+    return user.role === 'ROLE_ASSOCIATE' ? user.empId : props.ibmId;
+  }
+
   const fetchDocuments = () => {
-    const id =
-      user.role === 'ROLE_ASSOCIATE' ? user.empId : props.forAssociate.empId;
+    
+    const id = getIdByRole();
+
     const reviewerId = user.role === 'ROLE_ASSOCIATE' ? '' : user.empId;
     var url = props.fetchDocumentURL ? props.fetchDocumentURL : '';
     
@@ -132,8 +140,8 @@ const DocumentTable = forwardRef((props: any, ref) => {
   };
 
   const submitReviewed = () => {
-    const id =
-      user.role === 'ROLE_ASSOCIATE' ? user.empId : props.forAssociate.empId;
+    
+    const id = getIdByRole();
     const reviewerId = user.role === 'ROLE_ASSOCIATE' ? '' : user.empId;
     axios
       .put(`http://localhost:9003/files/reviewer/${reviewerId}/employee/${id}`,{headers: { Authorization: 'Bearer ' + userToken },})
@@ -147,8 +155,8 @@ const DocumentTable = forwardRef((props: any, ref) => {
   };
 
   const downloadDocsForAsso = () => {
-    const id =
-      user.role === 'ROLE_ASSOCIATE' ? user.empId : props.forAssociate.empId;
+    
+    const id = getIdByRole();
     const reviewerId = user.role === 'ROLE_ASSOCIATE' ? '' : user.empId;
     const url = `http://localhost:9003/files/reviewer/${reviewerId}/employee/${id}/zip`;
     axios

@@ -2,5 +2,6 @@ import * as yup from "yup";
 
 export const FilterUploadDocumentValidationSchema = yup.object().shape({
     empId: yup.string(),
-    password: yup.string(),
+    empId2: yup.string().required("Please select an associate to view the documents"),
+    
 });

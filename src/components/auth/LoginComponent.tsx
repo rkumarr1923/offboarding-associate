@@ -14,7 +14,7 @@ import { ChangeEvent, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../store";
-import { LoginRequest, LoginResponse } from "../common/type";
+import { LoginRequest, LoginResponse } from "../constants/type";
 import "../styles/login.css";
 import { LoginValidationSchema } from "./LoginComponent.validation";
 import { InputText } from "../core/InputText/InputText";
@@ -45,7 +45,7 @@ const LoginComponent = () => {
     axios
       .post("http://localhost:9099/loginuser/user", data)
       .then((result: LoginResponse) => {
-        console.log("result ==== >"+JSON.stringify(result));
+        // console.log("result ==== >"+JSON.stringify(result));
         if (result.data.token) {
           dispatch(
             login({
@@ -62,52 +62,7 @@ const LoginComponent = () => {
           navigate("/");
         } else setError(true);
 
-        navigate("/");
-
-        // if (empId === "test") {
-        //   dispatch(
-        //     login({
-        //       token: result.token,
-        //       userDetails: {
-        //         name: result.data.associateName,
-        //         role: result.data.associateRole,
-        //         reviewer: result.data.reviewer,
-        //         manager: result.data.manager,
-        //         empId: empId,
-        //       },
-        //     })
-        //   );
-        //   navigate("/");
-        // } else if (empId === "u2m744") {
-        //   dispatch(
-        //     login({
-        //       token: result.token,
-        //       userDetails: {
-        //         name: result.data.managerName,
-        //         role: result.data.managerRole,
-        //         reviewer: null,
-        //         manager: null,
-        //         empId: empId,
-        //       },
-        //     })
-        //   );
-        //   navigate("/");
-        // } else if (empId === "u2r744") {
-        //   dispatch(
-        //     login({
-        //       token: result.token,
-        //       userDetails: {
-        //         name: result.data.reviewerName,
-        //         role: result.data.reviewerRole,
-        //         reviewer: null,
-        //         manager: result.data.manager,
-        //         empId: empId,
-        //       },
-        //     })
-        //   );
-        //   navigate("/");
-        // } else setError(true);
-
+        
       });
 
   } 

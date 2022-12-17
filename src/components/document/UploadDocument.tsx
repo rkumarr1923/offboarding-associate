@@ -18,16 +18,19 @@ import Loader from '../common/Loader';
 import { FilterUploadDocumentValidationSchema } from './FilterUploadDocument.validation';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
-import { Card, CardActions, CardContent, Grid, Typography } from '@mui/material';
+import { Box, Card, CardActions, CardContent, Grid, Typography } from '@mui/material';
 import { error } from 'console';
 import { InputText } from '../core/InputText/InputText';
 import NewSelectBox from '../core/NewSelect';
+import { UIConstants } from '../constants/UIConstants';
+import { Dropdown } from '../core/Dropdown/Dropdown';
+import { FlexRow } from '../common/Application.style';
 
 const UploadDocument = () => {
   const BASE_URL = 'http://localhost:9003/';
   const userToken = useSelector(token);
   const location = useLocation();
-  console.log("location >>>> "+JSON.stringify(location))
+  
   const { forAssociate } = location.state;
   const [documents, setDocuments] = useState([]);
   const [openSnakBar, setSnakBarOpen] = useState(false);
@@ -55,6 +58,7 @@ const UploadDocument = () => {
   const childRefReviewed = useRef<any>(null);
   const childRefNonReviewed = useRef<any>(null);
 
+  const [ibmId, setIbmId]= useState("AAA");
   const [empId, setEmpId] = useState("");
   const [password, setPswd] = useState("");
   const [error, setError] = useState(false);
@@ -64,6 +68,11 @@ const UploadDocument = () => {
     if (type === "empId") setEmpId(e.target.value);
     else if (type === "password") setPswd(e.target.value);
   };
+
+  const handleChange2 = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
+    
+    setIbmId(e.target.value);
+};
 
   useEffect(() => {
     fetchDocumentTypes();
@@ -133,7 +142,7 @@ const UploadDocument = () => {
     axios
       .get(BASE_URL+'document',{headers: { Authorization: 'Bearer ' + userToken }})
       .then((res: any) => {
-        console.log("res >>>>> "+JSON.stringify(res));
+        // console.log("res >>>>> "+JSON.stringify(res));
         setOptions([...res.data]);
         setOptionselect('1');
         setLoader(false);
@@ -149,14 +158,13 @@ const UploadDocument = () => {
     axios
       .get("http://localhost:9092/pru-associate/get-all-associates", {headers: { Authorization: 'Bearer ' + userToken }})
       .then((result: any) => {
-        console.log("result ==== >"+JSON.stringify(result));
+        // console.log("result ==== >"+JSON.stringify(result));
         
         setAssocaiteList([...result.data]);
         setAllAssoOptionSelect('1');
         setLoader(false);
 
       });
-
   } 
 
   const allAssociatesOptionChanged = (childData: any) => {
@@ -257,6 +265,8 @@ const UploadDocument = () => {
   
   const onSubmit = (data: any) => {
     console.log("REACT HOOK FORM DATA ---- >"+JSON.stringify(data));
+    
+
     // axios
     //   .get("http://localhost:9092/pru-associate/get-all-associates", {headers: { Authorization: 'Bearer ' + userToken }})
     //   .then((result: any) => {
@@ -309,75 +319,41 @@ const UploadDocument = () => {
         </div>
       </div>
 
+      <Box mb={6}>
+        <FlexRow>
+
       <form onSubmit={handleSubmit(onSubmit)}>
-                <>
-
-                <h2>Find Associate</h2>
-      <div className="input-fieldbox">
-        <div className="input-select">
-          {' '}
-          Select Associate:&nbsp;
-          <NewSelectBox
+         <>
+          <h2>Find Associate</h2>
+            <Grid item md={6} sm={6} xs={12}>
+      <div className="section-border">
+        <Dropdown
+            label={UIConstants.selectAnAssociate}
+            {...register("empId2")}
+            error={!!errors?.empId2}
+            onChange={handleChange2}
             options={assocaiteList}
-            onOptionChanged={allAssociatesOptionChanged}
-            optionselect={allAssoOptionSelect}
-          />
-        </div>{' '}
-        &nbsp;
+            helperText={
+                errors.empId2
+                    ? errors?.empId2.message
+                    : null
+            }
+        />
+        
       </div>
-
+      </Grid>
       
-        <Grid item xs={6}>
-          <Card>
-            <CardContent>
-              <>
-              {error && (
-                <p style={{ color: "red" }}>UserName or Password incorrect.</p>
-              )}
-
-              <InputText
-                autoFocus
-                label="Employee id"
-                value={empId}
-                {...register("empId")}
-                onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChange(e, "empId")}
-              />
-
-              <Typography variant="body2" color="text.secondary">
-                Please enter your IBM employee ID in 6 character. Eg: xxxxxx
-              </Typography>
-            
-              <InputText
-                label="Password"
-                value={password}
-                {...register("password")}
-                onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChange(e, "password")}
-              />  
-              {errors?.password?.message}
-              
-            </>
-            </CardContent>
-            <CardActions>
-              <Button
-                fullWidth
-                variant="contained"
-                className="login-btn"
-                type="submit"
-              >
-                Login
-              </Button>
-            </CardActions>
-          </Card>
-          
-        </Grid>
         </>
             </form>
-
+    </FlexRow>
+  </Box>
             
       <DocumentTable
         forAssociate={forAssociate}
+        ibmId={ibmId}
         onSyncDocuments={syncDocuments}
         ref={childRefNonReviewed}
+        key={ibmId}
         type="NOTREVIEWED"
         title="Documents:"
         fetchDocumentURL="http://localhost:9003/files/employee"
@@ -389,6 +365,7 @@ const UploadDocument = () => {
           options={options}
           onSyncDocuments={syncDocuments}
           ref={childRefReviewed}
+          key={ibmId}
           type="REVIEWED"
           title="Reviewed Documents:"
           fetchDocumentURL="http://localhost:9003/files/reviewer"
