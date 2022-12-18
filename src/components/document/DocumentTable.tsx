@@ -24,7 +24,7 @@ import { token, userDetails } from '../../store';
 import { useSelector } from 'react-redux';
 import Loader from '../common/Loader';
 
-const DocumentTable = forwardRef((props: any, ref) => {
+const DocumentTable = ((props: any) => {
   const userToken = useSelector(token);
   const [documents, setDocuments] = useState([]);
   const [open, setDialogStatus] = useState(false);
@@ -37,11 +37,11 @@ const DocumentTable = forwardRef((props: any, ref) => {
   //   manager: {empId: 'manager1', managerName: 'Arindam'}, empId: '000U2M747'
   // });
 
-  useImperativeHandle(ref, () => ({
-    fetchChildDocuments() {
-      fetchDocuments();
-    },
-  }));
+  // useImperativeHandle(ref, () => ({
+  //   fetchChildDocuments() {
+  //     fetchDocuments();
+  //   },
+  // }));
 
   useEffect(() => {
     fetchDocuments();

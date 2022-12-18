@@ -329,13 +329,13 @@ const UploadDocument = () => {
       <div className="section-border">
         <Dropdown
             label={UIConstants.selectAnAssociate}
-            {...register("empId2")}
-            error={!!errors?.empId2}
+            {...register("associateName")}
+            error={!!errors?.associateName}
             onChange={handleChange2}
             options={assocaiteList}
             helperText={
-                errors.empId2
-                    ? errors?.empId2.message
+                errors.associateName
+                    ? errors?.associateName.message
                     : null
             }
         />
@@ -352,7 +352,7 @@ const UploadDocument = () => {
         forAssociate={forAssociate}
         ibmId={ibmId}
         onSyncDocuments={syncDocuments}
-        ref={childRefNonReviewed}
+        // ref={childRefNonReviewed}
         key={ibmId}
         type="NOTREVIEWED"
         title="Documents:"
@@ -364,8 +364,8 @@ const UploadDocument = () => {
           forAssociate={forAssociate}
           options={options}
           onSyncDocuments={syncDocuments}
-          ref={childRefReviewed}
-          key={ibmId}
+          // ref={childRefReviewed}
+          key="reviewedSection"
           type="REVIEWED"
           title="Reviewed Documents:"
           fetchDocumentURL="http://localhost:9003/files/reviewer"
