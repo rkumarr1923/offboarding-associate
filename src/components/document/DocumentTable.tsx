@@ -56,10 +56,11 @@ const DocumentTable = forwardRef((props: any, ref) => {
     setDialogStatus(true);
   };
 
-  const getIdByRole=(): string =>{
+  const getIdByRole=(): string | boolean =>{
     // const id =
     //   user.role === 'ROLE_ASSOCIATE' ? user.empId : props.forAssociate.empId;
 
+    if (!props.ibmId) return false;
     return user.role === 'ROLE_ASSOCIATE' ? user.empId : props.ibmId;
   }
 
@@ -124,17 +125,15 @@ const DocumentTable = forwardRef((props: any, ref) => {
       });
   };
 
-  const deleteDocs = (id: any) => {
-    const url = props.deleteURL
-      ? props.deleteURL
-      : `http://localhost:9003/files/delete/${id}`;
+  const deleteDocs = (id: string) => {
+    const url = `http://localhost:9003/files/delete/${id}`;
     axios
       .delete(url,{headers: { Authorization: 'Bearer ' + userToken },})
-      .then((result) => {
+      .then((result: any) => {
         setDialogStatus(false);
         fetchDocuments();
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.log(err);
       });
   };
@@ -167,7 +166,7 @@ const DocumentTable = forwardRef((props: any, ref) => {
           const fileURL = URL.createObjectURL(file);
           var a = document.createElement('a');
           a.href = fileURL;
-          a.download = 'Onboarding_' + id + '.ZIP';
+          a.download = 'Offboarding_' + id + '.ZIP';
           document.body.appendChild(a);
           a.click();
         }
@@ -187,6 +186,7 @@ const DocumentTable = forwardRef((props: any, ref) => {
             <div className="content-left">
               <h3>{props.title}</h3>
             </div>
+            
             {documents.length > 0 &&
               user.role !== 'ROLE_ASSOCIATE' &&
               props.type === 'NOTREVIEWED' && (
@@ -194,10 +194,10 @@ const DocumentTable = forwardRef((props: any, ref) => {
                   <div className="download-icon">
                     <i
                       title="Download All"
-                      className="fa fa-download"
+                      className="fa fa-download cursor"
                       onClick={() => downloadDocsForAsso()}
                       aria-hidden="true"
-                    ></i>
+                    ><u>Download All</u></i>
                   </div>
                   {/* <h3>
                 <a href={downloadAllURL.url} className="btn btn-primary">Download All Link</a>
@@ -217,12 +217,12 @@ const DocumentTable = forwardRef((props: any, ref) => {
                       <TableCell>S.No.</TableCell>
                       <TableCell>Name</TableCell>
                       <TableCell>Document Type</TableCell>
-                      {((user.role !== 'ROLE_ASSOCIATE' &&
+                      {/* {((user.role !== 'ROLE_ASSOCIATE' &&
                         props.type === 'REVIEWED') ||
                         (user.role === 'ROLE_ASSOCIATE' &&
-                          props.type === 'NOTREVIEWED')) && (
+                          props.type === 'NOTREVIEWED')) && ( */}
                         <TableCell>Delete</TableCell>
-                      )}
+                      {/* )} */}
                       <TableCell>Download</TableCell>
                     </TableRow>
                   </TableHead>
@@ -243,10 +243,10 @@ const DocumentTable = forwardRef((props: any, ref) => {
                         <TableCell component="th" scope="row">
                           {doc.documentType.name}
                         </TableCell>
-                        {((user.role !== 'ROLE_ASSOCIATE' &&
+                        {/* {((user.role !== 'ROLE_ASSOCIATE' &&
                           props.type === 'REVIEWED') ||
                           (user.role === 'ROLE_ASSOCIATE' &&
-                            props.type === 'NOTREVIEWED')) && (
+                            props.type === 'NOTREVIEWED')) && ( */}
                           <TableCell>
                             <Button
                               color="secondary"
@@ -255,7 +255,7 @@ const DocumentTable = forwardRef((props: any, ref) => {
                               Delete
                             </Button>
                           </TableCell>
-                        )}
+                        {/* )} */}
                         <TableCell>
                           <Button
                             color="primary"
@@ -308,7 +308,7 @@ const DocumentTable = forwardRef((props: any, ref) => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Once deleted canot be reverted.
+            Once deleted can't be reverted.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

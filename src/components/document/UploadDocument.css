@@ -90,3 +90,7 @@
     width: 30%;
     z-index: 999;
   }
+
+  .cursor {
+    cursor: pointer;
+  }
