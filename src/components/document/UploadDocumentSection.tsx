@@ -15,7 +15,7 @@ import { token, userDetails } from '../../store';
 import { useSelector } from 'react-redux';
 import DocumentTable from './DocumentTable';
 import Loader from '../common/Loader';
-import { SelectAssociateValidationSchema } from './FilterUploadDocument.validation';
+import { FilterUploadDocumentValidationSchema } from './FilterUploadDocument.validation';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { Box, Card, CardActions, CardContent, Grid, Typography } from '@mui/material';
@@ -25,10 +25,9 @@ import NewSelectBox from '../core/NewSelect';
 import { UIConstants } from '../constants/UIConstants';
 import { Dropdown } from '../core/Dropdown/Dropdown';
 import { FlexRow } from '../common/Application.style';
-import UploadDocumentSection from './UploadDocumentSection';
 import { mapAPItoUIDocTypeDropdown } from '../../transformation/reponseMapper';
 
-const UploadDocument = () => {
+const UploadDocumentSection = () => {
   const BASE_URL = 'http://localhost:9003/';
   const userToken = useSelector(token);
   const location = useLocation();
@@ -73,7 +72,7 @@ const UploadDocument = () => {
 
   const handleChange2 = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
 
-    setIbmId(e.target.value);
+    optionChanged(e.target.value);
   };
 
   useEffect(() => {
@@ -174,6 +173,7 @@ const UploadDocument = () => {
   };
 
   const optionChanged = (childData: any) => {
+    console.log(":::::::::::: >>>>>" + childData)
     setOptionselect(childData);
   };
 
@@ -186,8 +186,8 @@ const UploadDocument = () => {
   };
 
   const openUpdateDialog = () => {
-    const yy: any = document.getElementById('myfile');
-    const updateFileName = yy.files[0].name;
+    const myfile: any = document.getElementById('myfile');
+    const updateFileName = myfile.files[0].name;
     //var filteredObj = [];
     var isPopupDisplay: boolean | undefined = false;
     if (user.role === 'ROLE_ASSOCIATE') {
@@ -258,157 +258,95 @@ const UploadDocument = () => {
     }
   };
 
-
   const { register, trigger, handleSubmit, watch, formState: { errors } } = useForm({
     mode: 'all',
-    resolver: yupResolver(SelectAssociateValidationSchema),
+    resolver: yupResolver(FilterUploadDocumentValidationSchema),
   });
 
 
   const onSubmit = (data: any) => {
     console.log("REACT HOOK FORM DATA ---- >" + JSON.stringify(data));
 
-
-    // axios
-    //   .get("http://localhost:9092/pru-associate/get-all-associates", {headers: { Authorization: 'Bearer ' + userToken }})
-    //   .then((result: any) => {
-    //     console.log("result ==== >"+JSON.stringify(result));
-
-    //     setAssocaiteList([...result.data]);
-    //     // setOptionselect('1');
-    //     setLoader(false);
-
-    //   });
+    openUpdateDialog();
 
   }
 
   return loader ? (
     <Loader />
   ) : (
-    <div className="upload-doc-container">
-      <h2>Upload Documents</h2>
-      <div className="border-2px">
+    <div className="upload-doc-container ">
+      {/* <h2>Upload Documents</h2> */}
 
-        <UploadDocumentSection />
+      <form onSubmit={handleSubmit(onSubmit)}>
 
-        {/* <div className="input-select">
-          {' '}
-          Document Type:&nbsp;
-          <SelectBox
-            options={options}
-            onOptionChanged={optionChanged}
-            optionselect={optionselect}
-          />
-        </div>{' '}
-        &nbsp;
-        <div className="file-upload-wrapper" data-text="Select your file!">
-          <label htmlFor="myfile">
-            <input
-              className="input-field"
-              onChange={fileUpload}
-              id="myfile"
-              name="myfile"
-              type="file"
-            />
-          </label>{' '}
-          &nbsp;
-          <Button
-            color="primary"
-            variant="contained"
-            component="span"
-            onClick={() => openUpdateDialog()}
-            disabled={!(optionselect !== '1' && inputfile) || isReviewed}
-          >
-            Upload
-          </Button>
-        </div> */}
-      </div>
-
-      <Box mb={6}>
+        {/* <div className="border-2px"> */}
         <div className="col-md-12 container">
           <div className="col-md-4 flex-column">
-
-
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <>
-                <h2>Find Associate</h2>
-                <Grid item md={6} sm={6} xs={12}>
-                  <div className="section-border">
-                    <Dropdown
-                      label={UIConstants.selectAnAssociate}
-                      {...register("associateName")}
-                      error={!!errors?.associateName}
-                      onChange={handleChange2}
-                      // options={assocaiteList}
-                      options={mapAPItoUIDocTypeDropdown(assocaiteList, 'ibmId', 'associateName')}
-                      helperText={
-                        errors.associateName
-                          ? errors?.associateName.message
-                          : null
-                      }
-                    />
-
-                  </div>
-                </Grid>
-
-              </>
-            </form>
-
+            <Dropdown
+              label={UIConstants.selectDocumentType}
+              {...register("documentType")}
+              error={!!errors?.documentType}
+              onChange={handleChange2}
+              options={mapAPItoUIDocTypeDropdown(options, 'id', 'name')}
+              helperText={
+                errors.documentType
+                  ? errors?.documentType.message
+                  : null
+              }
+            />
+          </div>
+          <div className="col-md-4 flex-column text-center" data-text="Select your file!">
+            <label htmlFor="myfile">
+              <input
+                className="input-field"
+                onChange={fileUpload}
+                id="myfile"
+                name="myfile"
+                type="file"
+              />
+            </label>
+          </div>
+          <div className="col-md-4 flex-column">
+            <Button
+              fullWidth
+              variant="contained"
+              className="login-btn"
+              type="submit"
+            >
+              Upload
+            </Button>
           </div>
         </div>
 
-      </Box>
 
-      <DocumentTable
-        forAssociate={forAssociate}
-        ibmId={ibmId}
-        onSyncDocuments={syncDocuments}
-        // ref={childRefNonReviewed}
-        key={ibmId}
-        type="NOTREVIEWED"
-        title="Documents:"
-        fetchDocumentURL="http://localhost:9003/files/employee"
-      />
 
-      {user.role !== 'ROLE_ASSOCIATE' && (
-        <DocumentTable
-          forAssociate={forAssociate}
-          options={options}
-          onSyncDocuments={syncDocuments}
-          // ref={childRefReviewed}
-          key="reviewedSection"
-          type="REVIEWED"
-          title="Reviewed Documents:"
-          fetchDocumentURL="http://localhost:9003/files/reviewer"
-        />
-      )}
+        {/* <div className="file-upload-wrapper" data-text="Select your file!">
+            <label htmlFor="myfile">
+              <input
+                className="input-field"
+                onChange={fileUpload}
+                id="myfile"
+                name="myfile"
+                type="file"
+              />
+            </label>{' '}
+            &nbsp;
+            
 
-      <Dialog
-        open={openUpdate}
-        onClose={updateDialogClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {/* {`${docTobeUpdate.name} of type ${docTypeTobeUpdate} already exists. Do you want to replace it?`} */}
-          {`${updatePopupMessage}`}
-        </DialogTitle>
-        <DialogContent>
-          {(isDocTypePopup) &&
-            <DialogContentText id="alert-dialog-description">
-              Once updated canot be reverted.
-            </DialogContentText>
-          }
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={updateDialogClose}>Cancel</Button>
-          {(isDocTypePopup) &&
-            <Button onClick={() => callUploadAPI()} autoFocus>
-              Yes
-            </Button>
-          }
-        </DialogActions>
-      </Dialog>
+            <Button
+                fullWidth
+                variant="contained"
+                className="login-btn"
+                type="submit"
+              >
+                Upload
+              </Button>
+              
+          </div> */}
+        {/* </div> */}
+      </form>
+
+
 
       <Snackbar
         sx={{ height: '10%' }}
@@ -431,4 +369,4 @@ const UploadDocument = () => {
     </div>
   );
 };
-export default UploadDocument;
+export default UploadDocumentSection;

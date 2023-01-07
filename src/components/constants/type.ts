@@ -48,3 +48,8 @@ export interface TextareaType {
     error: any;
     helperText: any;
 }
+
+export interface DropdownValues{
+    id: string;
+    name: string;
+}

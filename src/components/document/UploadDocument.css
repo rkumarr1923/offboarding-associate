@@ -9,12 +9,12 @@
     padding: 0px 60px;
 }
 
-.main{
+.main {
     width: 100%;
     margin: 15px;
 }
 
-.input-fieldbox{
+.input-fieldbox {
     width: 1100px;
     padding: 8px 20px;
     margin: 8px 0;
@@ -24,7 +24,7 @@
     display: flex;
 }
 
-.section-border{
+.section-border {
     width: 1100px;
     padding: 8px 20px;
     margin: 8px 0;
@@ -34,7 +34,7 @@
     display: flex;
 }
 
-.input-select{
+.input-select {
     width: 450px;
     padding: 12px 20px;
     margin: 8px 0;
@@ -51,14 +51,14 @@
     box-sizing: border-box;
     border: 2px solid cadetblue;
     border-radius: 4px;
- }
+}
 
 .table-content {
     max-height: 450px;
     display: flex;
 }
 
-.button-content{
+.button-content {
     display: flex;
     justify-content: flex;
     align-items: center;
@@ -89,8 +89,29 @@
     height: 60px;
     width: 30%;
     z-index: 999;
-  }
+}
 
-  .cursor {
+.cursor {
     cursor: pointer;
-  }
+}
+
+.container {
+    display: flex;
+    /* or inline-flex */
+    /* align-content: flex-start | flex-end | center | space-between | space-around | space-evenly | stretch | start | end | baseline | first baseline | last baseline + ... safe | unsafe; */
+    flex-direction: row;
+    align-items: center;
+}
+
+.border-2px {
+    border: 2px solid cadetblue;
+    border-radius: 2px;
+}
+
+.flex-column {
+    flex-grow: 1;
+}
+
+.text-center {
+    text-align: center;
+}

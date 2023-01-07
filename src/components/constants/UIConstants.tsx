@@ -1,6 +1,7 @@
 // Constants to display UI elements
 export const UIConstants = {
-    selectAnAssociate: "Select Associate",
+    selectAnAssociate: "Select an Associate",
+    selectDocumentType: "Select Document Type",
     selectAnOption: "Select an option",
     isRequired: "is required",
     maxMessage: "Must be equal or less than",
