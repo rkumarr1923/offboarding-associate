@@ -16,7 +16,7 @@ import RecordingService from '../../../services/hooks/RecordingService';
 import { token, userDetails } from '../../../store';
 
 const tableHeader = ['Recording Description', 'Recording Link'];
-const RecordingList = (props) => {
+const RecordingList = (props: any) => {
   const userToken = useSelector(token);
   const user = useSelector(userDetails);
   const [recordings, setRecordings] = useState([]);
@@ -60,7 +60,7 @@ const RecordingList = (props) => {
         </TableHead>
         <TableBody>
           {props.recordings.length > 0 ? (
-            props.recordings.map((item) => (
+            props.recordings.map((item: any) => (
               <TableRow key={item.recordId}>
                 <TableCell>{item.recordDesc}</TableCell>
                 <TableCell>

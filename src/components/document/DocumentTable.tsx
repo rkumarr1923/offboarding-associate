@@ -56,7 +56,7 @@ const DocumentTable = ((props: any) => {
     setDialogStatus(true);
   };
 
-  const getIdByRole=(): string | boolean =>{
+  const getIdByRole = (): string | boolean => {
     // const id =
     //   user.role === 'ROLE_ASSOCIATE' ? user.empId : props.forAssociate.empId;
 
@@ -65,19 +65,19 @@ const DocumentTable = ((props: any) => {
   }
 
   const fetchDocuments = () => {
-    
+
     const id = getIdByRole();
 
     const reviewerId = user.role === 'ROLE_ASSOCIATE' ? '' : user.empId;
     var url = props.fetchDocumentURL ? props.fetchDocumentURL : '';
-    
+    //console.log("::::::::::::::: >>>" + props.type + " :: " + url);
     if (props.type === 'REVIEWED') {
       url = url + `/${reviewerId}/employee/${id}`;
     } else {
       url = url + `/${id}`;
     }
     axios
-      .get(url,{headers: { Authorization: 'Bearer ' + userToken },})
+      .get(url, { headers: { Authorization: 'Bearer ' + userToken }, })
       .then((res: any) => {
         //console.log(res.data);
         setDocuments(res.data);
@@ -128,7 +128,7 @@ const DocumentTable = ((props: any) => {
   const deleteDocs = (id: string) => {
     const url = `http://localhost:9003/files/delete/${id}`;
     axios
-      .delete(url,{headers: { Authorization: 'Bearer ' + userToken },})
+      .delete(url, { headers: { Authorization: 'Bearer ' + userToken }, })
       .then((result: any) => {
         setDialogStatus(false);
         fetchDocuments();
@@ -139,11 +139,11 @@ const DocumentTable = ((props: any) => {
   };
 
   const submitReviewed = () => {
-    
+
     const id = getIdByRole();
     const reviewerId = user.role === 'ROLE_ASSOCIATE' ? '' : user.empId;
     axios
-      .put(`http://localhost:9003/files/reviewer/${reviewerId}/employee/${id}`,{headers: { Authorization: 'Bearer ' + userToken },})
+      .put(`http://localhost:9003/files/reviewer/${reviewerId}/employee/${id}`, { headers: { Authorization: 'Bearer ' + userToken }, })
       .then((result) => {
         setDialogStatus(false);
         fetchDocuments();
@@ -154,12 +154,12 @@ const DocumentTable = ((props: any) => {
   };
 
   const downloadDocsForAsso = () => {
-    
+
     const id = getIdByRole();
     const reviewerId = user.role === 'ROLE_ASSOCIATE' ? '' : user.empId;
     const url = `http://localhost:9003/files/reviewer/${reviewerId}/employee/${id}/zip`;
     axios
-      .get(url, { headers: { Authorization: 'Bearer ' + userToken },responseType: 'blob' })
+      .get(url, { headers: { Authorization: 'Bearer ' + userToken }, responseType: 'blob' })
       .then((result: any) => {
         if (result) {
           const file = new Blob([result.data], { type: 'application/pdf' });
@@ -186,7 +186,7 @@ const DocumentTable = ((props: any) => {
             <div className="content-left">
               <h3>{props.title}</h3>
             </div>
-            
+
             {documents.length > 0 &&
               user.role !== 'ROLE_ASSOCIATE' &&
               props.type === 'NOTREVIEWED' && (
@@ -221,7 +221,7 @@ const DocumentTable = ((props: any) => {
                         props.type === 'REVIEWED') ||
                         (user.role === 'ROLE_ASSOCIATE' &&
                           props.type === 'NOTREVIEWED')) && ( */}
-                        <TableCell>Delete</TableCell>
+                      <TableCell>Delete</TableCell>
                       {/* )} */}
                       <TableCell>Download</TableCell>
                     </TableRow>
@@ -247,14 +247,14 @@ const DocumentTable = ((props: any) => {
                           props.type === 'REVIEWED') ||
                           (user.role === 'ROLE_ASSOCIATE' &&
                             props.type === 'NOTREVIEWED')) && ( */}
-                          <TableCell>
-                            <Button
-                              color="secondary"
-                              onClick={() => openDialog(doc)}
-                            >
-                              Delete
-                            </Button>
-                          </TableCell>
+                        <TableCell>
+                          <Button
+                            color="secondary"
+                            onClick={() => openDialog(doc)}
+                          >
+                            Delete
+                          </Button>
+                        </TableCell>
                         {/* )} */}
                         <TableCell>
                           <Button
@@ -266,6 +266,7 @@ const DocumentTable = ((props: any) => {
                         </TableCell>
                       </TableRow>
                     ))}
+
                     {user.role !== 'ROLE_ASSOCIATE' &&
                       props.type === 'REVIEWED' && (
                         <TableRow>
@@ -274,7 +275,7 @@ const DocumentTable = ((props: any) => {
                               disabled={
                                 !(
                                   documents.length ===
-                                    props.options.length - 1 && !isReviewed
+                                  props.options.length - 1 && !isReviewed
                                 )
                               }
                               onClick={() => submitReviewed()}

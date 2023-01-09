@@ -19,7 +19,7 @@ const RecordingMainComponent = () => {
     recordLink: '',
     recordLinkPassword: '',
   };
-  const [recordings, setRecordings] = useState([]);
+  const [recordings, setRecordings] = useState<any>([]);
   const headers = { Authorization: 'Bearer ' + userToken };
   useEffect(() => {
     // axios
@@ -39,28 +39,28 @@ const RecordingMainComponent = () => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const [editing, setEditing] = useState(false);
   const [currentRecording, setCurrentRecording] = useState(initialFormState);
-  
+
   const [loader, setLoader] = useState(true);
   // Add recording...
-  const addRecording = (recording) => {
+  const addRecording = (recording: any) => {
     //console.log(recording);
     //dispatch(recordings({ recordings }));
     console.log('in main component, add recording', recording);
     setRecordings([...recordings, recording]);
   };
   // delete recordings...
-  const deleteRecording = (recordId) => {
+  const deleteRecording = (recordId: any) => {
     setLoader(true);
     RecordingService.deleteRecording(recordId, headers).then((response) => {
       console.log(response.data);
       setRecordings(
-        recordings.filter((recording) => recording.recordId !== recordId)
+        recordings.filter((recording: any) => recording.recordId !== recordId)
       );
       setLoader(false);
     });
   };
   // set value for edit recording form...
-  const editRecording = (recording) => {
+  const editRecording = (recording: any) => {
     setEditing(true);
     setCurrentRecording({
       recordId: recording.recordId,
@@ -70,20 +70,20 @@ const RecordingMainComponent = () => {
     });
   };
   //  update recording
-  const updateRecording = (recordId, updatedRecording) => {
+  const updateRecording = (recordId: any, updatedRecording: any) => {
     setEditing(false);
-    console.log(recordId+ 'idd');
+    console.log(recordId + 'idd');
     setRecordings(
-      recordings.map((item) => {
+      recordings.map((item: any) => {
         return item.recordId === recordId ? updatedRecording : item;
       })
     );
   };
-  return (    
+  return (
     <div style={{ padding: '20px 20px 130px 20px' }}>
       <Grid container>
         {user.role === 'ROLE_ONBOARDING_MANAGER' ||
-        user.role === 'ROLE_ONBOARDING_REVIEWER' ? (
+          user.role === 'ROLE_ONBOARDING_REVIEWER' ? (
           <Grid item xs={12}>
             {editing ? (
               <Grid item xs={12}>

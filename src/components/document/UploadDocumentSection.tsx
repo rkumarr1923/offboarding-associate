@@ -70,7 +70,7 @@ const UploadDocumentSection = () => {
     else if (type === "password") setPswd(e.target.value);
   };
 
-  const handleChange2 = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
+  const handleDocumentType = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
 
     optionChanged(e.target.value);
   };
@@ -286,7 +286,7 @@ const UploadDocumentSection = () => {
               label={UIConstants.selectDocumentType}
               {...register("documentType")}
               error={!!errors?.documentType}
-              onChange={handleChange2}
+              onChange={handleDocumentType}
               options={mapAPItoUIDocTypeDropdown(options, 'id', 'name')}
               helperText={
                 errors.documentType
@@ -318,32 +318,6 @@ const UploadDocumentSection = () => {
           </div>
         </div>
 
-
-
-        {/* <div className="file-upload-wrapper" data-text="Select your file!">
-            <label htmlFor="myfile">
-              <input
-                className="input-field"
-                onChange={fileUpload}
-                id="myfile"
-                name="myfile"
-                type="file"
-              />
-            </label>{' '}
-            &nbsp;
-            
-
-            <Button
-                fullWidth
-                variant="contained"
-                className="login-btn"
-                type="submit"
-              >
-                Upload
-              </Button>
-              
-          </div> */}
-        {/* </div> */}
       </form>
 
 

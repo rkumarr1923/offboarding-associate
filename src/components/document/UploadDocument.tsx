@@ -60,18 +60,18 @@ const UploadDocument = () => {
   const childRefReviewed = useRef<any>(null);
   const childRefNonReviewed = useRef<any>(null);
 
-  const [ibmId, setIbmId] = useState("AAA");
+  const [ibmId, setIbmId] = useState("");
   const [empId, setEmpId] = useState("");
   const [password, setPswd] = useState("");
   const [error, setError] = useState(false);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
-    setError(false);
-    if (type === "empId") setEmpId(e.target.value);
-    else if (type === "password") setPswd(e.target.value);
-  };
+  // const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
+  //   setError(false);
+  //   if (type === "empId") setEmpId(e.target.value);
+  //   else if (type === "password") setPswd(e.target.value);
+  // };
 
-  const handleChange2 = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
+  const handleAssociateDropdownChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
 
     setIbmId(e.target.value);
   };
@@ -128,11 +128,11 @@ const UploadDocument = () => {
       });
   };
 
-  const fileUpload = (event: any) => {
-    //let changedFile = event.target.files[0];
-    let uploadedFiles = event.target.files;
-    setInputfile(true);
-  };
+  // const fileUpload = (event: any) => {
+  //   //let changedFile = event.target.files[0];
+  //   let uploadedFiles = event.target.files;
+  //   setInputfile(true);
+  // };
 
   const handleSnackClose = () => {
     setSnakBarOpen(false);
@@ -338,7 +338,7 @@ const UploadDocument = () => {
                       label={UIConstants.selectAnAssociate}
                       {...register("associateName")}
                       error={!!errors?.associateName}
-                      onChange={handleChange2}
+                      onChange={handleAssociateDropdownChange}
                       // options={assocaiteList}
                       options={mapAPItoUIDocTypeDropdown(assocaiteList, 'ibmId', 'associateName')}
                       helperText={
@@ -374,9 +374,10 @@ const UploadDocument = () => {
         <DocumentTable
           forAssociate={forAssociate}
           options={options}
+          ibmId={ibmId}
           onSyncDocuments={syncDocuments}
           // ref={childRefReviewed}
-          key="reviewedSection"
+          key={ibmId + 'reviewedSection'}
           type="REVIEWED"
           title="Reviewed Documents:"
           fetchDocumentURL="http://localhost:9003/files/reviewer"
