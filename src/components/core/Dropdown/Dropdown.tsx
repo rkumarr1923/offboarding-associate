@@ -32,11 +32,14 @@ export const Dropdown: React.FC<any> = React.forwardRef(
             >
                 <InputLabel id={name}>{label}</InputLabel>
                 <SelectInput {...selectDefaultProps} {...props} ref={ref}>
-                    <MenuItem value="">
-                        <em>{UIConstants.selectAnOption}</em>
-                    </MenuItem>
+
+                    {props.selectAnOption && (
+                        <MenuItem value="">
+                            <em>{UIConstants.selectAnOption}</em>
+                        </MenuItem>
+                    )}
+
                     {options?.map((items: any) => (
-                        // <MenuItem value={items.ibmId}>{items.associateName}</MenuItem>
                         <MenuItem value={items.id}>{items.name}</MenuItem>
                     ))}
                 </SelectInput>

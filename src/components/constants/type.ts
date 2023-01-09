@@ -1,14 +1,14 @@
 
-export type LoginRequest={
+export type LoginRequest = {
     empId: string;
     password: string;
 }
 
-export type LoginResponse={
+export type LoginResponse = {
     token?: any;
     data: {
         role: string,
-        email: string, 
+        email: string,
         name: string,
         userId: string,
         associateName?: string,
@@ -27,7 +27,7 @@ export type LoginResponse={
         },
         token: any
     }
-    
+
 }
 
 export interface DropdownType {
@@ -39,6 +39,7 @@ export interface DropdownType {
     onChange: any;
     helperText: any;
     options: Record<string, any>;
+    selectAnOption: boolean;
 }
 
 export interface TextareaType {
@@ -49,7 +50,7 @@ export interface TextareaType {
     helperText: any;
 }
 
-export interface DropdownValues{
+export interface DropdownValues {
     id: string;
     name: string;
 }

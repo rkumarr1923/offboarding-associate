@@ -39,9 +39,9 @@ const LoginComponent = () => {
     resolver: yupResolver(LoginValidationSchema),
   });
 
-  
+
   const onSubmit = (data: any) => {
-    console.log("REACT HOOK FORM DATA ---- >"+JSON.stringify(data));
+    console.log("REACT HOOK FORM DATA ---- >" + JSON.stringify(data));
     axios
       .post("http://localhost:9099/loginuser/user", data)
       .then((result: LoginResponse) => {
@@ -62,10 +62,10 @@ const LoginComponent = () => {
           navigate("/");
         } else setError(true);
 
-        
+
       });
 
-  } 
+  }
 
   return (
     <div className="login-wrapper">
@@ -83,52 +83,57 @@ const LoginComponent = () => {
         </Grid>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-                <>
-        <Grid item xs={12}>
-          <Card>
-            <CardContent>
-              <>
-              {error && (
-                <p style={{ color: "red" }}>UserName or Password incorrect.</p>
-              )}
+          <>
+            <Grid item xs={12}>
+              <Card>
+                <CardContent>
+                  <>
+                    {error && (
+                      <p style={{ color: "red" }}>UserName or Password incorrect.</p>
+                    )}
 
-              <InputText
-                autoFocus
-                label="Employee id"
-                value={empId}
-                {...register("empId")}
-                onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChange(e, "empId")}
-              />
+                    <InputText
+                      autoFocus
+                      label="Employee id"
+                      value={empId}
+                      {...register("empId")}
+                      onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChange(e, "empId")}
+                    />
 
-              <Typography variant="body2" color="text.secondary">
-                Please enter your IBM employee ID in 6 character. Eg: xxxxxx
-              </Typography>
-            
-              <InputText
-                label="Password"
-                value={password}
-                {...register("password")}
-                onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChange(e, "password")}
-              />  
-              {errors?.password?.message}
-              
-            </>
-            </CardContent>
-            <CardActions>
-              <Button
-                fullWidth
-                variant="contained"
-                className="login-btn"
-                type="submit"
-              >
-                Login
-              </Button>
-            </CardActions>
-          </Card>
-          
-        </Grid>
-        </>
-            </form>
+                    <Typography variant="body2" color="text.secondary">
+                      Please enter your IBM employee ID in 6 character. Eg: xxxxxx
+                    </Typography>
+
+                    <InputText
+                      label="Password"
+                      value={password}
+                      {...register("password")}
+                      onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChange(e, "password")}
+                      helperText={
+                        errors.password
+                          ? errors?.password.message
+                          : null
+                      }
+                    />
+                    {/* {errors?.password?.message} */}
+
+                  </>
+                </CardContent>
+                <CardActions>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    className="login-btn"
+                    type="submit"
+                  >
+                    Login
+                  </Button>
+                </CardActions>
+              </Card>
+
+            </Grid>
+          </>
+        </form>
       </Grid>
     </div>
   );

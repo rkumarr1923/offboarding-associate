@@ -339,8 +339,8 @@ const UploadDocument = () => {
                       {...register("associateName")}
                       error={!!errors?.associateName}
                       onChange={handleAssociateDropdownChange}
-                      // options={assocaiteList}
                       options={mapAPItoUIDocTypeDropdown(assocaiteList, 'ibmId', 'associateName')}
+                      selectAnOption
                       helperText={
                         errors.associateName
                           ? errors?.associateName.message
