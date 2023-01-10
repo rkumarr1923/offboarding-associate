@@ -287,7 +287,7 @@ const UploadDocumentSection = () => {
               {...register("documentType")}
               error={!!errors?.documentType}
               onChange={handleDocumentType}
-              options={mapAPItoUIDocTypeDropdown(options, 'id', 'name')}
+              options={mapAPItoUIDocTypeDropdown<any>(options, 'id', 'name')}
               helperText={
                 errors.documentType
                   ? errors?.documentType.message
