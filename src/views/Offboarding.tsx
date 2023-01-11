@@ -18,6 +18,14 @@ export default function Offboarding() {
           (user.role === 'ROLE_ONBOARDING_REVIEWER' ||
             user.role === 'ROLE_ONBOARDING_MANAGER') && (
             <>
+               <li className={isTabActive('NewUser')}>
+                <Link to="/NewUser">
+                  <Button
+                    label="NewUser"
+                    clickHandler={() => tabClicked('NewUser')}
+                  />
+                </Link>
+              </li>
               <li className={isTabActive('Recordings')}>
                 <Link to="/recording">
                   <Button
@@ -46,6 +54,15 @@ export default function Offboarding() {
           )}
         {user && user.role === 'ROLE_ASSOCIATE' && (
           <>
+
+            <li className={isTabActive('NewUser')}>
+              <Link to="/NewUSer">
+                <Button
+                  label="NewUser"
+                  clickHandler={() => tabClicked('NewUser')}
+                />
+              </Link>
+            </li>
             <li className={isTabActive('Sample Documents')}>
               <Link to="/sampleDocuments">
                 <Button

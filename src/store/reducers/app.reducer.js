@@ -7,6 +7,8 @@ const newUserInitState = {
   managerName: '',
   role: '',
   userName: '',
+  FristName:'',
+  LastName:'',
   password: '',
   showPassword: false,
   isLoginButonDisabled: false,
@@ -18,6 +20,8 @@ const newUserInitState = {
     errorManagerName: false,
     errorRole: false,
     errorUserName: false,
+    errorFristName: false,
+    errorLastName: false,
     errorPassword: false,
     errorGeneratebutton: false,
   },
@@ -32,6 +36,8 @@ const slice = createSlice({
     userDetails: null,
     comments: [],
     createNewUserDetailsData: newUserInitState,
+    createFristName:newUserInitState,
+    createLastName:newUserInitState,
     managers: [],
     reviewers: [],
     roles: [],
@@ -50,6 +56,14 @@ const slice = createSlice({
     createNewUserDetails: (state, action) => {
       state.createNewUserDetailsData = action.payload.createNewUser;
     },
+    createFristName: (state, action) => {
+      state.createFristName = action.payload.createFristName;
+    },
+    createLastName: (state, action) => {
+      state.createLastName = action.payload.createLastName;
+    },
+
+  
     login: (state, action) => {
       state.token = action.payload.token;
       state.userDetails = action.payload.userDetails;
@@ -64,6 +78,12 @@ const slice = createSlice({
     },
     resetCreateNewUserDetails: (state) => {
       state.createNewUserDetailsData = newUserInitState;
+    },
+    resetCreateFristName: (state) => {
+      state.createFristName = createFristName;
+    },
+    resetCreateLastName: (state) => {
+      state.createLastName = createLastName;
     },
     roles: (state, action) => {
       state.roles = action.payload.roles;
@@ -92,6 +112,8 @@ export const {
   logout,
   comments,
   createNewUserDetails,
+  // FristName,
+  // LastName,
   resetCreateNewUserDetails,
   managers,
   reviewers,
@@ -105,6 +127,8 @@ export const associates = (state) => state.associateList;
 export const token = (state) => state.token;
 export const userComments = (state) => state.comments;
 export const createNewUser = (state) => state.createNewUserDetailsData;
+export const createFristName=(state)=>state.FristName;
+export const createLastName=(state)=>state.LastName;
 export const allRoles = (state) => state.roles;
 export const allManagers = (state) => state.managers;
 export const allReviewers = (state) => state.reviewers;

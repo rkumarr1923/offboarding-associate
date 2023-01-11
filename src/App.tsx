@@ -16,6 +16,7 @@ import LoginComponent from "./components/auth/LoginComponent";
 import "./styles/app.css";
 import SampleDocuments from './components/document/SampleDocuments';
 import Offboarding from './views/Offboarding';
+import NewUserComponent from './components/User/NewUserComponent';
 
 function App() {
   const user = useSelector(userDetails);
@@ -42,8 +43,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Offboarding />}>
             <Route path="/" element={<Welcome />} />
+          
             {user && (
               <>
+                <Route path="/NewUser" element={<NewUserComponent />} />
                 <Route path="uploadDocuments" element={<UploadDocument />} />
                 <Route path="sampleDocuments" element={<SampleDocuments />} />
                 <Route path="recording" element={<Recording />} />
