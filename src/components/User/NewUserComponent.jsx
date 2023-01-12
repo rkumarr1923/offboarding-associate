@@ -47,9 +47,9 @@ const NewUserComponent = () => {
   // const LastName=useSelector(createLastName);
   const newUserDetails = useSelector(createNewUser);
   const allRole = useSelector(allRoles);
-   
+
   const isEmail = (email) =>
-  /^[A-Z0-9._%+-]+@[IBM,ibm]+\.[COM,com]{2,4}$/i.test(email);
+    /^[A-Z0-9._%+-]+@[IBM,ibm]+\.[COM,com]{2,4}$/i.test(email);
 
   const assosiateRoleId = allRole.find((data) => {
     return data.name == 'ROLE_ASSOCIATE';
@@ -89,7 +89,7 @@ const NewUserComponent = () => {
       dispatch(
         createNewUserDetails({
           createNewUser: {
-            ...newUserDetails, 
+            ...newUserDetails,
             isGeneratedButtonDisabled: true,
             password: generatedPassword,
             error: {
@@ -103,8 +103,8 @@ const NewUserComponent = () => {
     } else {
       let errorEmployeeId = false;
       let errorUserName = false;
-      let errorFristName=false;
-      let errorLastName=false;
+      let errorFristName = false;
+      let errorLastName = false;
       if (newUserDetails.employeeId === '') errorEmployeeId = true;
       if (newUserDetails.FristName === '') errorFristName = true;
       if (newUserDetails.LastName === '') errorLastName = true;
@@ -113,7 +113,7 @@ const NewUserComponent = () => {
         createNewUserDetails({
           createNewUser: {
             ...newUserDetails,
-            error: { ...newUserDetails.error, errorEmployeeId, errorUserName ,errorFristName, errorLastName},
+            error: { ...newUserDetails.error, errorEmployeeId, errorUserName, errorFristName, errorLastName },
           },
         })
       );
@@ -129,7 +129,7 @@ const NewUserComponent = () => {
           [prop]: event.target.value,
           isGeneratedButtonDisabled:
             // prop === 'UserName' || 
-            prop === 'employeeId' 
+            prop === 'employeeId'
               ? false
               : newUserDetails.isGeneratedButtonDisabled,
           error: { ...newUserDetails.error, [errorType]: false },
@@ -146,7 +146,7 @@ const NewUserComponent = () => {
     e.preventDefault();
     let error = {};
     if (newUserDetails.email === '') error = { ...error, errorEmail: true };
-    
+
     if (!isEmail(newUserDetails.email)) {
       error = { ...error, errorEmail: true };
     }
@@ -154,13 +154,13 @@ const NewUserComponent = () => {
     if (newUserDetails.employeeId === '')
       error = { ...error, errorEmployeeId: true };
 
-      // // if (newUserDetails.employeeId) {
-      // //   error = { ...error, errorEmployeeId: true };
-      // } 
-      else if (newUserDetails.employeeId.length > 6) {
-        error = { ...error, errorEmployeeId: true };
-      }
-    
+    // // if (newUserDetails.employeeId) {
+    // //   error = { ...error, errorEmployeeId: true };
+    // } 
+    else if (newUserDetails.employeeId.length > 6) {
+      error = { ...error, errorEmployeeId: true };
+    }
+
     if (
       newUserDetails.reviewerName === '' &&
       newUserDetails.role === assosiateRoleId?.id
@@ -174,25 +174,25 @@ const NewUserComponent = () => {
     )
       error = { ...error, errorManagerName: true };
     if (newUserDetails.role === '') error = { ...error, errorRole: true };
-    
+
     // if (newUserDetails.userName === '')
     //   error = { ...error, errorUserName: true };
 
     if (newUserDetails.FristName === '')
       error = { ...error, errorFristName: true };
-      // if (newUserDetails.FristName)
-      // error = { ...error, errorFristName: true };
+    // if (newUserDetails.FristName)
+    // error = { ...error, errorFristName: true };
 
     if (newUserDetails.LastName === '')
       error = { ...error, errorLastName: true };
-      // if (newUserDetails.LastName)
-      // error = { ...error, errorLastName: true };
+    // if (newUserDetails.LastName)
+    // error = { ...error, errorLastName: true };
 
     if (newUserDetails.password === '')
       error = { ...error, errorPassword: true };
-       if (newUserDetails.employeeId.length > 6) {
-        error = { ...error, errorEmployeeId: true };
-      }
+    if (newUserDetails.employeeId.length > 6) {
+      error = { ...error, errorEmployeeId: true };
+    }
     dispatch(
       createNewUserDetails({
         createNewUser: { ...newUserDetails, error },
@@ -209,14 +209,13 @@ const NewUserComponent = () => {
             },
           })
         );
-      } else 
-      {
+      } else {
         const requestData = {
           employeeId: newUserDetails.employeeId,
           email: newUserDetails.email,
           // userName: newUserDetails.userName,
-          FristName: newUserDetails.FirstName,
-          LastName: newUserDetails.lastName,
+          FristName: newUserDetails.FristName,
+          LastName: newUserDetails.LastName,
           password: newUserDetails.password,
           roleId: newUserDetails.role,
           reviewerEmpId:
@@ -225,7 +224,7 @@ const NewUserComponent = () => {
               : 'N/A',
           managerEmpId:
             newUserDetails.role === assosiateRoleId?.id ||
-            newUserDetails.role === reviewerRoleId?.id
+              newUserDetails.role === reviewerRoleId?.id
               ? newUserDetails.managerName
               : 'N/A',
         };
@@ -237,8 +236,8 @@ const NewUserComponent = () => {
                 associateName: response.data.userName,
                 ibmId: response.data.employeeId,
                 emailIbm: response.data.email,
-                FristName:response.data.FristName,  
-                LastName:response.data.LastName,
+                FristName: response.data.FristName,
+                LastName: response.data.LastName,
                 activeInactive: 'Yet to be started',
               };
               const associateResponse = axios.post(
@@ -247,7 +246,7 @@ const NewUserComponent = () => {
                 {
                   headers: { Authorization: 'Bearer ' + userToken },
                 }
-              ); 
+              );
               console.log(associateResponse);
             }
             setSnackbarOpen(true);
@@ -339,7 +338,7 @@ const NewUserComponent = () => {
                 error={newUserDetails.error.errorUserName}
                 onChange={handleChange('userName', 'errorUserName')}
               /> */}
-               <TextField
+              <TextField
                 margin="dense"
                 label="FirstName"
                 type="text"
@@ -349,7 +348,7 @@ const NewUserComponent = () => {
                 error={newUserDetails.error.errorFristName}
                 onChange={handleChange('FristName', 'errorFristName')}
               />
-               <TextField
+              <TextField
                 margin="dense"
                 label="LastName"
                 type="text"
@@ -440,7 +439,7 @@ const NewUserComponent = () => {
                       '& legend': { display: 'none' },
                       '& fieldset': { top: 0 },
                     }}
-                    //   inputProps={{ "aria-label": "Without label" }}
+                  //   inputProps={{ "aria-label": "Without label" }}
                   >
                     <MenuItem disabled value="">
                       UserRole
@@ -477,7 +476,7 @@ const NewUserComponent = () => {
                       '& legend': { display: 'none' },
                       '& fieldset': { top: 0 },
                     }}
-                    //   inputProps={{ "aria-label": "Without label" }}
+                  //   inputProps={{ "aria-label": "Without label" }}
                   >
                     <MenuItem disabled value="">
                       Reviewer Name
@@ -518,7 +517,7 @@ const NewUserComponent = () => {
                         '& legend': { display: 'none' },
                         '& fieldset': { top: 0 },
                       }}
-                      //   inputProps={{ "aria-label": "Without label" }}
+                    //   inputProps={{ "aria-label": "Without label" }}
                     >
                       <MenuItem disabled value="">
                         Manager Name
