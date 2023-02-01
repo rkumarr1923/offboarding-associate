@@ -35,6 +35,7 @@ import {
   token,
 } from '../../store';
 import '../styles/login.css';
+import { generate, generateMultiple, validate } from '@wcj/generate-password';
 
 
 const NewUserComponent = () => {
@@ -82,6 +83,11 @@ const NewUserComponent = () => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const generatePassword = () => {
+    const randomPasword = generate({ length: 15 });
+    const passWordStrength = validate(randomPasword);
+    console.log("randomPasword is :: >>>>>>>" + randomPasword);
+    console.log("passWordStrength is :: >>>>>>>" + passWordStrength);
+
     if (newUserDetails.employeeId !== '' && newUserDetails.FristName !== '') {
       const generatedPassword =
         newUserDetails.FristName.replace(/\s+/g, '').slice(0, 3) +
