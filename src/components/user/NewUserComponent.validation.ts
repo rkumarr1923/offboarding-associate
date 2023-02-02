@@ -6,7 +6,7 @@ export const NewUserValidationSchema = yup.object().shape({
     firstName: yup.string().required("Please enter First Name"),
     lastName: yup.string().required("Please enter Last Name"),
     password: yup.string().required("Please enter Password"),
-    userRole: yup.string().required("Please select Role"),
-    reviewerId: yup.string().required("Please select Reviewer"),
-    managerId: yup.string().required("Please select Manager"),
+    roleId: yup.string().required("Please select Role"),
+    reviewerEmpId: yup.string().required("Please select Reviewer"),
+    managerEmpId: yup.string().required("Please select Manager"),
 });

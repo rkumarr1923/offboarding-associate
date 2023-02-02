@@ -189,119 +189,119 @@ const NewUserComponent = () => {
     setSnackbarOpen(false);
   };
 
-  const handleNewUser = (e: any) => {
-    e.preventDefault();
-    let error = {};
-    if (newUserDetails.email === '') error = { ...error, errorEmail: true };
+  // const handleNewUser = (e: any) => {
+  //   e.preventDefault();
+  //   let error = {};
+  //   // if (newUserDetails.email === '') error = { ...error, errorEmail: true };
 
-    if (!isEmail(newUserDetails.email)) {
-      error = { ...error, errorEmail: true };
-    }
+  //   // if (!isEmail(newUserDetails.email)) {
+  //   //   error = { ...error, errorEmail: true };
+  //   // }
 
-    if (newUserDetails.employeeId === '')
-      error = { ...error, errorEmployeeId: true };
+  //   // if (newUserDetails.employeeId === '')
+  //   //   error = { ...error, errorEmployeeId: true };
 
-    // // if (newUserDetails.employeeId) {
-    // //   error = { ...error, errorEmployeeId: true };
-    // } 
-    else if (newUserDetails.employeeId.length > 6) {
-      error = { ...error, errorEmployeeId: true };
-    }
+  //   // // if (newUserDetails.employeeId) {
+  //   // //   error = { ...error, errorEmployeeId: true };
+  //   // } 
+  //   // else if (newUserDetails.employeeId.length > 6) {
+  //   //   error = { ...error, errorEmployeeId: true };
+  //   // }
 
-    if (
-      newUserDetails.reviewerName === '' &&
-      newUserDetails.role === assosiateRoleId?.id
-    )
-      error = { ...error, errorReviewerName: true };
+  //   // if (
+  //   //   newUserDetails.reviewerName === '' &&
+  //   //   newUserDetails.role === assosiateRoleId?.id
+  //   // )
+  //   //   error = { ...error, errorReviewerName: true };
 
-    if (
-      newUserDetails.managerName === '' &&
-      (newUserDetails.role === assosiateRoleId?.id ||
-        newUserDetails.role === reviewerRoleId?.id)
-    )
-      error = { ...error, errorManagerName: true };
-    if (newUserDetails.role === '') error = { ...error, errorRole: true };
+  //   // if (
+  //   //   newUserDetails.managerName === '' &&
+  //   //   (newUserDetails.role === assosiateRoleId?.id ||
+  //   //     newUserDetails.role === reviewerRoleId?.id)
+  //   // )
+  //   //   error = { ...error, errorManagerName: true };
+  //   // if (newUserDetails.role === '') error = { ...error, errorRole: true };
 
-    // if (newUserDetails.userName === '')
-    //   error = { ...error, errorUserName: true };
+  //   // if (newUserDetails.userName === '')
+  //   //   error = { ...error, errorUserName: true };
 
-    // if (newUserDetails.FristName === '')
-    //   error = { ...error, errorFristName: true };
-    // if (newUserDetails.FristName)
-    // error = { ...error, errorFristName: true };
+  //   // if (newUserDetails.FristName === '')
+  //   //   error = { ...error, errorFristName: true };
+  //   // if (newUserDetails.FristName)
+  //   // error = { ...error, errorFristName: true };
 
-    // if (newUserDetails.LastName === '')
-    //   error = { ...error, errorLastName: true };
-    // if (newUserDetails.LastName)
-    // error = { ...error, errorLastName: true };
+  //   // if (newUserDetails.LastName === '')
+  //   //   error = { ...error, errorLastName: true };
+  //   // if (newUserDetails.LastName)
+  //   // error = { ...error, errorLastName: true };
 
-    // if (newUserDetails.password === '')
-    //   error = { ...error, errorPassword: true };
-    // if (newUserDetails.employeeId.length > 6) {
-    //   error = { ...error, errorEmployeeId: true };
-    // }
-    dispatch(
-      createNewUserDetails({
-        createNewUser: { ...newUserDetails, error },
-      })
-    );
-    // console.log('Error '+JSON.stringify(error));
-    if (JSON.stringify(error) === '{}') {
-      if (!newUserDetails.isGeneratedButtonDisabled) {
-        dispatch(
-          createNewUserDetails({
-            createNewUser: {
-              ...newUserDetails,
-              error: { errorGeneratebutton: true },
-            },
-          })
-        );
-      } else {
-        const requestData = {
-          employeeId: newUserDetails.employeeId,
-          email: newUserDetails.email,
-          // userName: newUserDetails.userName,
-          FristName: newUserDetails.FristName,
-          LastName: newUserDetails.LastName,
-          password: newUserDetails.password,
-          roleId: newUserDetails.role,
-          reviewerEmpId:
-            newUserDetails.role === assosiateRoleId?.id
-              ? newUserDetails.reviewerName
-              : 'N/A',
-          managerEmpId:
-            newUserDetails.role === assosiateRoleId?.id ||
-              newUserDetails.role === reviewerRoleId?.id
-              ? newUserDetails.managerName
-              : 'N/A',
-        };
-        axios
-          .post('http://localhost:9099/user_add', requestData)
-          .then((response) => {
-            if (response.data.role.name === 'ROLE_ASSOCIATE') {
-              const saveAssociateReq = {
-                associateName: response.data.userName,
-                ibmId: response.data.employeeId,
-                emailIbm: response.data.email,
-                FristName: response.data.FristName,
-                LastName: response.data.LastName,
-                activeInactive: 'Yet to be started',
-              };
-              const associateResponse = axios.post(
-                'http://localhost:9092/pru-associate/new-associate',
-                saveAssociateReq,
-                {
-                  headers: { Authorization: 'Bearer ' + userToken },
-                }
-              );
-              console.log(associateResponse);
-            }
-            setSnackbarOpen(true);
-            dispatch(resetCreateNewUserDetails());
-          });
-      }
-    } else console.log('Error');
-  };
+  //   // if (newUserDetails.password === '')
+  //   //   error = { ...error, errorPassword: true };
+  //   // if (newUserDetails.employeeId.length > 6) {
+  //   //   error = { ...error, errorEmployeeId: true };
+  //   // }
+  //   dispatch(
+  //     createNewUserDetails({
+  //       createNewUser: { ...newUserDetails, error },
+  //     })
+  //   );
+  //   // console.log('Error '+JSON.stringify(error));
+  //   if (JSON.stringify(error) === '{}') {
+  //     if (!newUserDetails.isGeneratedButtonDisabled) {
+  //       dispatch(
+  //         createNewUserDetails({
+  //           createNewUser: {
+  //             ...newUserDetails,
+  //             error: { errorGeneratebutton: true },
+  //           },
+  //         })
+  //       );
+  //     } else {
+  //       const requestData = {
+  //         employeeId: newUserDetails.employeeId,
+  //         email: newUserDetails.email,
+  //         // userName: newUserDetails.userName,
+  //         FristName: newUserDetails.FristName,
+  //         LastName: newUserDetails.LastName,
+  //         password: newUserDetails.password,
+  //         roleId: newUserDetails.role,
+  //         reviewerEmpId:
+  //           newUserDetails.role === assosiateRoleId?.id
+  //             ? newUserDetails.reviewerName
+  //             : 'N/A',
+  //         managerEmpId:
+  //           newUserDetails.role === assosiateRoleId?.id ||
+  //             newUserDetails.role === reviewerRoleId?.id
+  //             ? newUserDetails.managerName
+  //             : 'N/A',
+  //       };
+  //       axios
+  //         .post('http://localhost:9099/user_add', requestData)
+  //         .then((response) => {
+  //           if (response.data.role.name === 'ROLE_ASSOCIATE') {
+  //             const saveAssociateReq = {
+  //               associateName: response.data.userName,
+  //               ibmId: response.data.employeeId,
+  //               emailIbm: response.data.email,
+  //               FristName: response.data.FristName,
+  //               LastName: response.data.LastName,
+  //               activeInactive: 'Yet to be started',
+  //             };
+  //             const associateResponse = axios.post(
+  //               'http://localhost:9092/pru-associate/new-associate',
+  //               saveAssociateReq,
+  //               {
+  //                 headers: { Authorization: 'Bearer ' + userToken },
+  //               }
+  //             );
+  //             console.log(associateResponse);
+  //           }
+  //           setSnackbarOpen(true);
+  //           dispatch(resetCreateNewUserDetails());
+  //         });
+  //     }
+  //   } else console.log('Error');
+  // };
 
   const handleClickShowPassword = () => {
 
@@ -325,15 +325,40 @@ const NewUserComponent = () => {
   };
 
 
-  const { register, trigger, handleSubmit, watch, formState: { errors } } = useForm({
+  const { register, trigger, getValues, handleSubmit, watch, formState: { errors } } = useForm({
     mode: 'all',
     resolver: yupResolver(NewUserValidationSchema),
   });
 
 
   const onSubmit = (data: any) => {
-    console.log("REACT HOOK FORM DATA ---- >" + JSON.stringify(data));
+    const requestData = { ...data, 'userName': getValues('firstName') + " " + getValues('lastName') };
+    console.log("REACT HOOK FORM DATA FINAL ---- >" + JSON.stringify(requestData));
 
+    axios.post('http://localhost:9099/user_add', requestData)
+      .then((response) => {
+        console.log("response is ::::: >>>>" + JSON.stringify(response));
+        if (response.data.role.name === 'ROLE_ASSOCIATE') {
+          const saveAssociateReq = {
+            associateName: response.data.userName,
+            ibmId: response.data.employeeId,
+            emailIbm: response.data.email,
+            FristName: response.data.FristName,
+            LastName: response.data.LastName,
+            activeInactive: 'Yet to be started',
+          };
+          const associateResponse = axios.post(
+            'http://localhost:9092/pru-associate/new-associate',
+            saveAssociateReq,
+            {
+              headers: { Authorization: 'Bearer ' + userToken },
+            }
+          );
+          console.log("associateResponse ::: >>>" + JSON.stringify(associateResponse));
+        }
+        // setSnackbarOpen(true);
+        // dispatch(resetCreateNewUserDetails());
+      });
 
   }
 
@@ -598,14 +623,14 @@ const NewUserComponent = () => {
 
                     <Dropdown
                       label={UIConstants.selectUser}
-                      {...register("userRole")}
-                      error={!!errors?.userRole}
+                      {...register("roleId")}
+                      error={!!errors?.roleId}
                       onChange={handleAssociateDropdownChange}
                       options={mapAPItoUIDocTypeDropdown(allRole, 'id', 'name')}
                       selectAnOption
                       helperText={
-                        errors.userRole
-                          ? errors?.userRole.message
+                        errors.roleId
+                          ? errors?.roleId.message
                           : null
                       }
                     />
@@ -650,14 +675,14 @@ const NewUserComponent = () => {
 
                   <Dropdown
                     label={UIConstants.selectReviewer}
-                    {...register("reviewerId")}
-                    error={!!errors?.reviewerId}
+                    {...register("reviewerEmpId")}
+                    error={!!errors?.reviewerEmpId}
                     onChange={handleAssociateDropdownChange}
                     options={mapAPItoUIDocTypeDropdown(allReviewer, 'empId', 'reviewerName')}
                     selectAnOption
                     helperText={
-                      errors.reviewerId
-                        ? errors?.reviewerId.message
+                      errors.reviewerEmpId
+                        ? errors?.reviewerEmpId.message
                         : null
                     }
                   />
@@ -707,14 +732,14 @@ const NewUserComponent = () => {
 
                   <Dropdown
                     label={UIConstants.selectManager}
-                    {...register("managerId")}
-                    error={!!errors?.managerId}
+                    {...register("managerEmpId")}
+                    error={!!errors?.managerEmpId}
                     onChange={handleAssociateDropdownChange}
                     options={mapAPItoUIDocTypeDropdown(allManager, 'empId', 'managerName')}
                     selectAnOption
                     helperText={
-                      errors.managerId
-                        ? errors?.managerId.message
+                      errors.managerEmpId
+                        ? errors?.managerEmpId.message
                         : null
                     }
                   />
