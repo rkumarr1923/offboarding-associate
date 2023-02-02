@@ -5,6 +5,9 @@ export const UIConstants = {
     selectAnOption: "Select an option",
     isRequired: "is required",
     maxMessage: "Must be equal or less than",
+    selectUser: "User Role",
+    selectReviewer: "User Reviewer",
+    selectManager: "User Manager",
 };
 
 export const projectStatusLabelValues: Record<string, any>[] = [

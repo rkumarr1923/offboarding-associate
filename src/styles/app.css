@@ -20,7 +20,7 @@ body {
 }
 
 .onboarding-wrapper {
-  position: fixed;
+  /* position: fixed; */
   height: 100%;
   width: 100%;
 }
@@ -44,7 +44,8 @@ body {
   align-content: center;
   list-style: none;
   background: #1976d2;
-  padding: 10px 0px;
+  /* padding: 10px 0px; */
+  padding: 0px;
   position: static;
   height: 60px;
   width: 100%;
