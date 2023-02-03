@@ -53,7 +53,7 @@ const SampleDocuments = () => {
     // setLoader(false);
 
     axios
-      .get(BASE_URL+'files/sampledoc', {
+      .get(BASE_URL + 'files/sampledoc', {
         headers: { Authorization: 'Bearer ' + userToken },
       })
       .then((res) => {
@@ -63,7 +63,7 @@ const SampleDocuments = () => {
       .catch((err) => {
         console.log(err);
       });
-    
+
   };
 
   const fetchDocumentTypes = () => {
@@ -72,12 +72,12 @@ const SampleDocuments = () => {
     // setOption(response.filter(obj=> obj.id===0)[0]);
 
     axios
-      .get(BASE_URL+'document/sample', {
+      .get(BASE_URL + 'document/sample', {
         headers: { Authorization: 'Bearer ' + userToken },
       })
       .then((res: any) => {
         setOptions([...res.data]);
-        setOption(res.data.filter((obj: { id: number; })=> obj.id===0)[0]);
+        setOption(res.data.filter((obj: { id: number; }) => obj.id === 0)[0]);
         setOptionselect('0');
       })
       .catch((err) => {
@@ -143,10 +143,10 @@ const SampleDocuments = () => {
       redirect: 'follow',
     };
     axios
-      .post(BASE_URL+'files', formdata, {
+      .post(BASE_URL + 'files', formdata, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization':'Bearer '+userToken
+          'Authorization': 'Bearer ' + userToken
         },
       })
       .then((result) => {
@@ -169,7 +169,7 @@ const SampleDocuments = () => {
   };
 
   const resetFields = () => {
-    const tt= document.getElementById('myfile') as any;
+    const tt = document.getElementById('myfile') as any;
     tt.value = '';
     setOptionselect('0');
     setInputfile(false);
@@ -177,7 +177,7 @@ const SampleDocuments = () => {
 
   const download = (id: any, name: string) => {
     axios
-      .get(BASE_URL+`files/${id}`, { headers: { Authorization: 'Bearer ' + userToken }, responseType: 'blob' })
+      .get(BASE_URL + `files/${id}`, { headers: { Authorization: 'Bearer ' + userToken }, responseType: 'blob' })
       .then((result) => {
         //console.log(result);
         if (result) {
@@ -205,63 +205,64 @@ const SampleDocuments = () => {
   };
 
   const deleteDocs = (id: any) => {
-    // const deleteUrl = 'newURLForDelete';
-    // axios
-    //   .delete(deleteUrl+`${id}`)
-    //   .then((result) => {
-    //     setDialogStatus(false);
-    //     //console.log(result);
-    //     fetchDocuments();
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    const deleteUrl = `${BASE_URL}files/delete/${id}`;
+    console.log("BASE_URL >>>> " + BASE_URL)
+    axios
+      .delete(deleteUrl, { headers: { Authorization: 'Bearer ' + userToken }, })
+      .then((result) => {
+        setDialogStatus(false);
+        //console.log(result);
+        fetchDocuments();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
     <div className="upload-doc-container">
       {(user.role === 'ROLE_ONBOARDING_MANAGER' ||
         user.role === 'ROLE_ONBOARDING_REVIEWER') && (
-        <div>
-          <h2>Upload Documents</h2>
-          <div className="input-fieldbox">
-            <div className="input-select">
-              {' '}
-              Document Type:&nbsp;
-              {/* <SelectBox
+          <div>
+            <h2>Upload Documents</h2>
+            <div className="input-fieldbox">
+              <div className="input-select">
+                {' '}
+                Document Type:&nbsp;
+                {/* <SelectBox
                 options={options}
                 onOptionChanged={optionChanged}
                 optionselect={optionselect}
               /> */}
-              <label htmlFor="documenttype">
+                <label htmlFor="documenttype">
                   <input id="documenttype" name="documenttype" value={option.name} type="text" disabled={true} />
-              </label>
-            </div>{' '}
-            &nbsp;
-            <div className="file-upload-wrapper" data-text="Select your file!">
-              <label htmlFor="myfile">
-                <input
-                  className="input-field"
-                  onChange={fileUpload}
-                  id="myfile"
-                  name="myfile"
-                  type="file"
-                />
-              </label>{' '}
+                </label>
+              </div>{' '}
               &nbsp;
-              <Button
-                color="primary"
-                variant="contained"
-                component="span"
-                onClick={() => openUpdateDialog()}
-                disabled={!(optionselect !== '1' && inputfile)}
-              >
-                Upload
-              </Button>
+              <div className="file-upload-wrapper" data-text="Select your file!">
+                <label htmlFor="myfile">
+                  <input
+                    className="input-field"
+                    onChange={fileUpload}
+                    id="myfile"
+                    name="myfile"
+                    type="file"
+                  />
+                </label>{' '}
+                &nbsp;
+                <Button
+                  color="primary"
+                  variant="contained"
+                  component="span"
+                  onClick={() => openUpdateDialog()}
+                  disabled={!(optionselect !== '1' && inputfile)}
+                >
+                  Upload
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
       <div className="button-content">
         <div className="content-left">
           <h3>Sample Documents:</h3>
