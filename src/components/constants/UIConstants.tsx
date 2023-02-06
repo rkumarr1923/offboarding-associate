@@ -8,6 +8,14 @@ export const UIConstants = {
     selectUser: "User Role",
     selectReviewer: "Reviewer Name",
     selectManager: "Manager Name",
+    newUserPasswordTooltip: "Password will be generated automatically by clicking on 'Generate Password' button",
+    addNewUserLabel: "Add New User",
+    employeeIdLabel: "Employee id",
+    emailIdLabel: "Email Id",
+    firstNameLabel: "First Name",
+    lastNameLabel: "Last Name",
+    passwordLabel: "Password",
+    generatePasswordBtnLabel: "Generate Password"
 };
 
 export const projectStatusLabelValues: Record<string, any>[] = [

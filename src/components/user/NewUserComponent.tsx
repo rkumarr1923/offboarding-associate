@@ -413,7 +413,7 @@ const NewUserComponent = () => {
       >
         <Grid item xs={12}>
           <Typography variant="h6">
-            <strong>Add New User</strong>
+            <strong>{UIConstants.addNewUserLabel}</strong>
           </Typography>
         </Grid>
         <Grid item xs={12} className="pt-2">
@@ -422,7 +422,7 @@ const NewUserComponent = () => {
               <CardContent>
 
                 <InputText
-                  label="Employee id"
+                  label={UIConstants.employeeIdLabel}
                   autoFocus
                   value={employeeId}
                   error={!!errors?.employeeId}
@@ -436,7 +436,7 @@ const NewUserComponent = () => {
                 />
 
                 <InputText
-                  label="Email Id"
+                  label={UIConstants.emailIdLabel}
                   type="email"
                   value={email}
                   error={!!errors?.email}
@@ -450,7 +450,7 @@ const NewUserComponent = () => {
                 />
 
                 <InputText
-                  label="First Name"
+                  label={UIConstants.firstNameLabel}
                   value={firstName}
                   {...register("firstName")}
                   error={!!errors?.firstName}
@@ -463,7 +463,7 @@ const NewUserComponent = () => {
                 />
 
                 <InputText
-                  label="Last Name"
+                  label={UIConstants.lastNameLabel}
                   value={lastName}
                   {...register("lastName")}
                   error={!!errors?.lastName}
@@ -551,7 +551,7 @@ const NewUserComponent = () => {
 
 
                 <InputText
-                  label="Password"
+                  label={UIConstants.passwordLabel}
                   value={password}
                   disable
                   type={attribteType}
@@ -569,9 +569,7 @@ const NewUserComponent = () => {
                       <>
                         <InputAdornment position="end">
                           <Tooltip
-                            title="Password will be generated based on EmployeeID and Employee Name.
-  Ex: EmployeeID - 123456, Employee Name - x test
-  Generated Password - xte123456"
+                            title={UIConstants.newUserPasswordTooltip}
                           >
                             <IconButton>
                               <InfoRounded />
@@ -642,7 +640,7 @@ const NewUserComponent = () => {
                   onClick={generatePassword}
                   style={{ marginTop: '10px' }}
                 >
-                  Generate Password
+                  {UIConstants.generatePasswordBtnLabel}
                 </Button>
                 {/* <Typography
                   variant="caption"
