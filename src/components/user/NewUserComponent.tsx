@@ -56,8 +56,28 @@ const NewUserComponent = () => {
   const newUserDetails = useSelector(createNewUser);
   const allRole = useSelector(allRoles);
 
+
+  const [employeeId, setEmployeeId] = useState("");
+  const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [password, setPassword] = useState("");
+  const [attribteType, setAttribteType] = useState('password');
+  const [userRoleType, setUserRoleType] = useState('AAA');
+
+
   const isEmail = (email: any) =>
     /^[A-Z0-9._%+-]+@[IBM,ibm]+\.[COM,com]{2,4}$/i.test(email);
+
+  const getRoleName = (roleId: string) => {
+    allRole.filter((data: any) => {
+      if (data.id == roleId) {
+        return data.name;
+
+      }
+    })
+
+  };
 
   const assosiateRoleId = allRole.find((data: any) => {
     return data.name == 'ROLE_ASSOCIATE';
@@ -88,11 +108,16 @@ const NewUserComponent = () => {
       if (response.data) dispatch(reviewers({ reviewers: response.data }));
       else console.log('No Reviewers');
     });
+
     return () => dispatch(resetCreateNewUserDetails());
+
+
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleAssociateDropdownChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
     // do something
+    setUserRoleType(e.target.value);
+    // console.log(e.target.value);
   };
 
   const generatePassword = () => {
@@ -141,14 +166,6 @@ const NewUserComponent = () => {
     //   );
     // }
   };
-
-
-  const [employeeId, setEmployeeId] = useState("");
-  const [email, setEmail] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [password, setPassword] = useState("");
-  const [attribteType, setAttribteType] = useState('password');
 
   const handleChange2 = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
     if (type == "employeeId") {
@@ -334,6 +351,8 @@ const NewUserComponent = () => {
   const onSubmit = (data: any) => {
     const requestData = { ...data, 'userName': getValues('firstName') + " " + getValues('lastName') };
     console.log("REACT HOOK FORM DATA FINAL ---- >" + JSON.stringify(requestData));
+
+    console.log("REACT HOOK errors  ---- >" + JSON.stringify(errors));
 
     axios.post('http://localhost:9099/user_add', requestData)
       .then((response) => {
@@ -673,20 +692,21 @@ const NewUserComponent = () => {
                 {/* {newUserDetails.role === assosiateRoleId?.id && allReviewer && ( */}
                 <>
 
-                  <Dropdown
-                    label={UIConstants.selectReviewer}
-                    {...register("reviewerEmpId")}
-                    error={!!errors?.reviewerEmpId}
-                    onChange={handleAssociateDropdownChange}
-                    options={mapAPItoUIDocTypeDropdown(allReviewer, 'empId', 'reviewerName')}
-                    selectAnOption
-                    helperText={
-                      errors.reviewerEmpId
-                        ? errors?.reviewerEmpId.message
-                        : null
-                    }
-                  />
-
+                  {userRoleType === "63bbedee42fd516ddaf2e7be" && (
+                    <Dropdown
+                      label={UIConstants.selectReviewer}
+                      {...register("reviewerEmpId")}
+                      error={!!errors?.reviewerEmpId}
+                      onChange={handleAssociateDropdownChange}
+                      options={mapAPItoUIDocTypeDropdown(allReviewer, 'empId', 'reviewerName')}
+                      selectAnOption
+                      helperText={
+                        errors.reviewerEmpId
+                          ? errors?.reviewerEmpId.message
+                          : null
+                      }
+                    />
+                  )}
                   {/* <Select
                     margin="dense"
                     displayEmpty
@@ -729,21 +749,22 @@ const NewUserComponent = () => {
                   allManager && ( */}
                 <>
 
-
-                  <Dropdown
-                    label={UIConstants.selectManager}
-                    {...register("managerEmpId")}
-                    error={!!errors?.managerEmpId}
-                    onChange={handleAssociateDropdownChange}
-                    options={mapAPItoUIDocTypeDropdown(allManager, 'empId', 'managerName')}
-                    selectAnOption
-                    helperText={
-                      errors.managerEmpId
-                        ? errors?.managerEmpId.message
-                        : null
-                    }
-                  />
-
+                  {/* ---{userRoleType}--- */}
+                  {(userRoleType === "63885ca42c2a9f5a595f487a" || userRoleType === "63bbedee42fd516ddaf2e7be") && (
+                    <Dropdown
+                      label={UIConstants.selectManager}
+                      {...register("managerEmpId")}
+                      error={!!errors?.managerEmpId}
+                      onChange={handleAssociateDropdownChange}
+                      options={mapAPItoUIDocTypeDropdown(allManager, 'empId', 'managerName')}
+                      selectAnOption
+                      helperText={
+                        errors.managerEmpId
+                          ? errors?.managerEmpId.message
+                          : null
+                      }
+                    />
+                  )}
                   {/* <Select
                     margin="dense"
                     displayEmpty
