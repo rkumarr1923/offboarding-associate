@@ -114,11 +114,23 @@ const NewUserComponent = () => {
 
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleAssociateDropdownChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
+  const handleUserDropdownChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
     // do something
     setUserRoleType(e.target.value);
     // console.log(e.target.value);
   };
+
+  const handleReviewerDropdownChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
+    // do something
+
+  };
+
+  const handleManagerDropdownChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
+    // do something
+
+  };
+
+
 
   const generatePassword = () => {
 
@@ -128,7 +140,9 @@ const NewUserComponent = () => {
     console.log("randomPasword is :: >>>>>>>" + randomPasword);
     console.log("passWordStrength is :: >>>>>>>" + passWordStrength);
 
+    setFocus("password");
     setPassword(randomPasword);
+
     // if (newUserDetails.employeeId !== '' && newUserDetails.FristName !== '') {
     //   const generatedPassword =
     //     newUserDetails.FristName.replace(/\s+/g, '').slice(0, 3) +
@@ -167,7 +181,7 @@ const NewUserComponent = () => {
     // }
   };
 
-  const handleChange2 = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
     if (type == "employeeId") {
       setEmployeeId(e.target.value);
     } else if (type == "email") {
@@ -184,23 +198,23 @@ const NewUserComponent = () => {
   };
 
 
-  const handleChange = (prop: any, errorType: any) => (event: any) => {
-    event.preventDefault();
-    dispatch(
-      createNewUserDetails({
-        createNewUser: {
-          ...newUserDetails,
-          [prop]: event.target.value,
-          isGeneratedButtonDisabled:
-            // prop === 'UserName' || 
-            prop === 'employeeId'
-              ? false
-              : newUserDetails.isGeneratedButtonDisabled,
-          error: { ...newUserDetails.error, [errorType]: false },
-        },
-      })
-    );
-  };
+  // const handleChange = (prop: any, errorType: any) => (event: any) => {
+  //   event.preventDefault();
+  //   dispatch(
+  //     createNewUserDetails({
+  //       createNewUser: {
+  //         ...newUserDetails,
+  //         [prop]: event.target.value,
+  //         isGeneratedButtonDisabled:
+  //           // prop === 'UserName' || 
+  //           prop === 'employeeId'
+  //             ? false
+  //             : newUserDetails.isGeneratedButtonDisabled,
+  //         error: { ...newUserDetails.error, [errorType]: false },
+  //       },
+  //     })
+  //   );
+  // };
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
@@ -342,7 +356,7 @@ const NewUserComponent = () => {
   };
 
 
-  const { register, trigger, getValues, handleSubmit, watch, formState: { errors } } = useForm({
+  const { register, trigger, getValues, setValue, setFocus, handleSubmit, watch, formState: { errors } } = useForm({
     mode: 'all',
     resolver: yupResolver(NewUserValidationSchema),
   });
@@ -413,7 +427,7 @@ const NewUserComponent = () => {
                   value={employeeId}
                   error={!!errors?.employeeId}
                   {...register("employeeId")}
-                  onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChange2(e, "employeeId")}
+                  onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleInputChange(e, "employeeId")}
                   helperText={
                     errors.employeeId
                       ? errors?.employeeId.message
@@ -427,7 +441,7 @@ const NewUserComponent = () => {
                   value={email}
                   error={!!errors?.email}
                   {...register("email")}
-                  onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChange2(e, "email")}
+                  onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleInputChange(e, "email")}
                   helperText={
                     errors.email
                       ? errors?.email.message
@@ -440,7 +454,7 @@ const NewUserComponent = () => {
                   value={firstName}
                   {...register("firstName")}
                   error={!!errors?.firstName}
-                  onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChange2(e, "firstName")}
+                  onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleInputChange(e, "firstName")}
                   helperText={
                     errors.firstName
                       ? errors?.firstName.message
@@ -453,7 +467,7 @@ const NewUserComponent = () => {
                   value={lastName}
                   {...register("lastName")}
                   error={!!errors?.lastName}
-                  onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChange2(e, "lastName")}
+                  onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleInputChange(e, "lastName")}
                   helperText={
                     errors.lastName
                       ? errors?.lastName.message
@@ -539,10 +553,11 @@ const NewUserComponent = () => {
                 <InputText
                   label="Password"
                   value={password}
+                  disable
                   type={attribteType}
                   {...register("password")}
                   error={!!errors?.password}
-                  onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChange2(e, "password")}
+                  onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleInputChange(e, "password")}
                   helperText={
                     errors.password
                       ? errors?.password.message
@@ -629,14 +644,14 @@ const NewUserComponent = () => {
                 >
                   Generate Password
                 </Button>
-                <Typography
+                {/* <Typography
                   variant="caption"
                   color={
                     newUserDetails.error.errorGeneratebutton ? 'red' : 'black'
                   }
                 >
                   Please generate password
-                </Typography>
+                </Typography> */}
                 {allRole && (
                   <>
 
@@ -644,7 +659,7 @@ const NewUserComponent = () => {
                       label={UIConstants.selectUser}
                       {...register("roleId")}
                       error={!!errors?.roleId}
-                      onChange={handleAssociateDropdownChange}
+                      onChange={handleUserDropdownChange}
                       options={mapAPItoUIDocTypeDropdown(allRole, 'id', 'name')}
                       selectAnOption
                       helperText={
@@ -697,7 +712,7 @@ const NewUserComponent = () => {
                       label={UIConstants.selectReviewer}
                       {...register("reviewerEmpId")}
                       error={!!errors?.reviewerEmpId}
-                      onChange={handleAssociateDropdownChange}
+                      onChange={handleReviewerDropdownChange}
                       options={mapAPItoUIDocTypeDropdown(allReviewer, 'empId', 'reviewerName')}
                       selectAnOption
                       helperText={
@@ -755,7 +770,7 @@ const NewUserComponent = () => {
                       label={UIConstants.selectManager}
                       {...register("managerEmpId")}
                       error={!!errors?.managerEmpId}
-                      onChange={handleAssociateDropdownChange}
+                      onChange={handleManagerDropdownChange}
                       options={mapAPItoUIDocTypeDropdown(allManager, 'empId', 'managerName')}
                       selectAnOption
                       helperText={

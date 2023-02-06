@@ -22,7 +22,7 @@ export const NewUserValidationSchema = yup.object().shape({
         .max(60),
     password: yup
         .string()
-        .required("Please enter Password"),
+        .required("Please generate the Password"),
     roleId: yup
         .string()
         .required("Please select Role"),
