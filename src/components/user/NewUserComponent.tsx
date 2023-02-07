@@ -43,6 +43,9 @@ import { useForm } from 'react-hook-form';
 import { mapAPItoUIDocTypeDropdown } from '../../transformation/reponseMapper';
 import { UIConstants } from '../constants/UIConstants';
 import { Dropdown } from '../core/Dropdown/Dropdown';
+import React from 'react';
+import { saveNewUser } from '../../services/NewUserService';
+import { mapNewUserModel_UItoAPI } from '../../transformation/UserMapper';
 
 
 const NewUserComponent = () => {
@@ -363,37 +366,41 @@ const NewUserComponent = () => {
 
 
   const onSubmit = (data: any) => {
-    const requestData = { ...data, 'userName': getValues('firstName') + " " + getValues('lastName') };
-    console.log("REACT HOOK FORM DATA FINAL ---- >" + JSON.stringify(requestData));
+    const UIData = { ...data, 'userName': getValues('firstName') + " " + getValues('lastName') };
+    console.log("REACT HOOK FORM DATA FINAL ---- >" + JSON.stringify(UIData));
 
     console.log("REACT HOOK errors  ---- >" + JSON.stringify(errors));
 
-    axios.post('http://localhost:9099/user_add', requestData)
-      .then((response) => {
-        console.log("response is ::::: >>>>" + JSON.stringify(response));
-        setSnakBarOpen(true);
+    const apiData = mapNewUserModel_UItoAPI(UIData);
 
-        if (response.data.role.name === 'ROLE_ASSOCIATE') {
-          const saveAssociateReq = {
-            associateName: response.data.userName,
-            ibmId: response.data.employeeId,
-            emailIbm: response.data.email,
-            FristName: response.data.FristName,
-            LastName: response.data.LastName,
-            activeInactive: 'Yet to be started',
-          };
-          const associateResponse = axios.post(
-            'http://localhost:9092/pru-associate/new-associate',
-            saveAssociateReq,
-            {
-              headers: { Authorization: 'Bearer ' + userToken },
-            }
-          );
-          console.log("associateResponse ::: >>>" + JSON.stringify(associateResponse));
-        }
-        // setSnackbarOpen(true);
-        // dispatch(resetCreateNewUserDetails());
-      });
+    saveNewUser(apiData, userToken);
+
+    // axios.post('http://localhost:9099/user_add', requestData)
+    //   .then((response) => {
+    //     console.log("response is ::::: >>>>" + JSON.stringify(response));
+    //     setSnakBarOpen(true);
+
+    //     if (response.data.role.name === 'ROLE_ASSOCIATE') {
+    //       const saveAssociateReq = {
+    //         associateName: response.data.userName,
+    //         ibmId: response.data.employeeId,
+    //         emailIbm: response.data.email,
+    //         FristName: response.data.FristName,
+    //         LastName: response.data.LastName,
+    //         activeInactive: 'Yet to be started',
+    //       };
+    //       const associateResponse = axios.post(
+    //         'http://localhost:9092/pru-associate/new-associate',
+    //         saveAssociateReq,
+    //         {
+    //           headers: { Authorization: 'Bearer ' + userToken },
+    //         }
+    //       );
+    //       console.log("associateResponse ::: >>>" + JSON.stringify(associateResponse));
+    //     }
+    //     // setSnackbarOpen(true);
+    //     // dispatch(resetCreateNewUserDetails());
+    //   });
 
   }
 
