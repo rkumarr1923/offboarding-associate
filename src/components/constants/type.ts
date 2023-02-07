@@ -54,3 +54,14 @@ export interface DropdownValues {
     id: string;
     name: string;
 }
+
+export interface LabelVisibilityTestCaseType {
+    attributeLabel: string;
+    visibilityExpectation: boolean;
+    testcaseName?: string;
+}
+
+export interface RegExTestCaseType {
+    value: string;
+    isMatch: boolean;
+}
