@@ -63,7 +63,8 @@ const NewUserComponent = () => {
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [attribteType, setAttribteType] = useState('password');
-  const [userRoleType, setUserRoleType] = useState('AAA');
+  const [userRoleType, setUserRoleType] = useState('');
+  const [openSnakBar, setSnakBarOpen] = useState(false);
 
 
   const isEmail = (email: any) =>
@@ -76,7 +77,6 @@ const NewUserComponent = () => {
 
       }
     })
-
   };
 
   const assosiateRoleId = allRole.find((data: any) => {
@@ -371,6 +371,8 @@ const NewUserComponent = () => {
     axios.post('http://localhost:9099/user_add', requestData)
       .then((response) => {
         console.log("response is ::::: >>>>" + JSON.stringify(response));
+        setSnakBarOpen(true);
+
         if (response.data.role.name === 'ROLE_ASSOCIATE') {
           const saveAssociateReq = {
             associateName: response.data.userName,

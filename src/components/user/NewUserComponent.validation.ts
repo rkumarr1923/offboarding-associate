@@ -4,10 +4,16 @@ import { UIConstants } from "../constants/UIConstants";
 export const NewUserValidationSchema = yup.object().shape({
     employeeId: yup
         .string()
-        .required(`Please enter IBM ${UIConstants.employeeIdLabel} in 6 character. Eg: xxxxxx`),
+        .required(`Please enter IBM ${UIConstants.employeeIdLabel} in 6 character. Eg: xxxxxx`)
+        .min(6, `${UIConstants.employeeIdLabel} must be 6 char only`)
+        .max(6, `${UIConstants.employeeIdLabel} must be 6 char only`),
     email: yup
         .string()
         .email(`Please enter ${UIConstants.emailIdLabel} in valid format, i.e. 'xyz@ibm.com'`)
+        .matches(
+            /^gg@ibm.com$/,
+            `${UIConstants.emailIdLabel} must be IBM email, i.e. 'xyz@ibm.com / xyz@in.ibm.com'`
+        )
         .required(`Please enter ${UIConstants.emailIdLabel}`),
     firstName: yup
         .string()
