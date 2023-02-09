@@ -120,6 +120,7 @@ const NewUserComponent = () => {
   const handleUserDropdownChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
     // do something
     setUserRoleType(e.target.value);
+    // e.preventDefault();
     // console.log(e.target.value);
   };
 
@@ -361,11 +362,12 @@ const NewUserComponent = () => {
 
     reset(newUserFormDefaultValues);
     setPassword(newUserFormDefaultValues.password);
-
-    // trigger('roleId');
+    // setValue('roleId', '');
+    resetField('roleId')
+    trigger('roleId');
   }
 
-  const { register, trigger, reset, getValues, setValue, setFocus, handleSubmit, watch, formState: { errors } } = useForm({
+  const { register, trigger, reset, resetField, getValues, setValue, setFocus, handleSubmit, watch, formState: { errors } } = useForm({
     mode: 'all',
     defaultValues: newUserFormDefaultValues,
     resolver: yupResolver(NewUserValidationSchema),
@@ -384,7 +386,7 @@ const NewUserComponent = () => {
       saveNewUser(apiData, userToken);
       resetForm();
     } catch {
-      console.log("something went wrong");
+      console.log("something went wrong!!!");
     }
 
 
@@ -600,7 +602,7 @@ const NewUserComponent = () => {
                           </Tooltip>
                           <IconButton
                             aria-label="toggle password visibility"
-                            onClick={resetForm}
+                            onClick={handleClickShowPassword}
                             edge="end"
                           >
                             {attribteType === 'text' ? (
