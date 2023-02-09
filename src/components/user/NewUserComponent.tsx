@@ -37,7 +37,7 @@ import {
 import '../styles/login.css';
 import { generate, generateMultiple, validate } from '@wcj/generate-password';
 import { InputText } from '../core/InputText/InputText';
-import { NewUserValidationSchema } from './NewUserComponent.validation';
+import { newUserFormDefaultValues, NewUserValidationSchema } from './NewUserComponent.validation';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { mapAPItoUIDocTypeDropdown } from '../../transformation/reponseMapper';
@@ -125,12 +125,10 @@ const NewUserComponent = () => {
 
   const handleReviewerDropdownChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
     // do something
-
   };
 
   const handleManagerDropdownChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
     // do something
-
   };
 
 
@@ -184,21 +182,21 @@ const NewUserComponent = () => {
     // }
   };
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
-    if (type == "employeeId") {
-      setEmployeeId(e.target.value);
-    } else if (type == "email") {
-      setEmail(e.target.value);
-    } else if (type == "firstName") {
-      setFirstName(e.target.value);
-    } else if (type == "lastName") {
-      setLastName(e.target.value);
-    } else if (type == "password") {
-      setPassword(e.target.value);
-    }
+  // const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
+  //   if (type == "employeeId") {
+  //     // setEmployeeId(e.target.value);
+  //   } else if (type == "email") {
+  //     // setEmail(e.target.value);
+  //   } else if (type == "firstName") {
+  //     // setFirstName(e.target.value);
+  //   } else if (type == "lastName") {
+  //     // setLastName(e.target.value);
+  //   } else if (type == "password") {
+  //     // setPassword(e.target.value);
+  //   }
 
 
-  };
+  // };
 
 
   // const handleChange = (prop: any, errorType: any) => (event: any) => {
@@ -359,8 +357,17 @@ const NewUserComponent = () => {
   };
 
 
-  const { register, trigger, getValues, setValue, setFocus, handleSubmit, watch, formState: { errors } } = useForm({
+  const resetForm = () => {
+
+    reset(newUserFormDefaultValues);
+    setPassword(newUserFormDefaultValues.password);
+
+    // trigger('roleId');
+  }
+
+  const { register, trigger, reset, getValues, setValue, setFocus, handleSubmit, watch, formState: { errors } } = useForm({
     mode: 'all',
+    defaultValues: newUserFormDefaultValues,
     resolver: yupResolver(NewUserValidationSchema),
   });
 
@@ -373,7 +380,13 @@ const NewUserComponent = () => {
 
     const apiData = mapNewUserModel_UItoAPI(UIData);
 
-    saveNewUser(apiData, userToken);
+    try {
+      saveNewUser(apiData, userToken);
+      resetForm();
+    } catch {
+      console.log("something went wrong");
+    }
+
 
     // axios.post('http://localhost:9099/user_add', requestData)
     //   .then((response) => {
@@ -433,10 +446,10 @@ const NewUserComponent = () => {
                 <InputText
                   label={UIConstants.employeeIdLabel}
                   autoFocus
-                  value={employeeId}
+                  // value={employeeId}
                   error={!!errors?.employeeId}
                   {...register("employeeId")}
-                  onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleInputChange(e, "employeeId")}
+                  // onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleInputChange(e, "employeeId")}
                   helperText={
                     errors.employeeId
                       ? errors?.employeeId.message
@@ -447,10 +460,11 @@ const NewUserComponent = () => {
                 <InputText
                   label={UIConstants.emailIdLabel}
                   type="email"
-                  value={email}
+                  // value={email}
                   error={!!errors?.email}
                   {...register("email")}
-                  onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleInputChange(e, "email")}
+                  placeholder="Please enter email, for exapmle 'xyz@ibm.com'"
+                  //onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleInputChange(e, "email")}
                   helperText={
                     errors.email
                       ? errors?.email.message
@@ -460,10 +474,10 @@ const NewUserComponent = () => {
 
                 <InputText
                   label={UIConstants.firstNameLabel}
-                  value={firstName}
+                  // value={firstName}
                   {...register("firstName")}
                   error={!!errors?.firstName}
-                  onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleInputChange(e, "firstName")}
+                  //onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleInputChange(e, "firstName")}
                   helperText={
                     errors.firstName
                       ? errors?.firstName.message
@@ -473,10 +487,10 @@ const NewUserComponent = () => {
 
                 <InputText
                   label={UIConstants.lastNameLabel}
-                  value={lastName}
+                  // value={lastName}
                   {...register("lastName")}
                   error={!!errors?.lastName}
-                  onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleInputChange(e, "lastName")}
+                  //onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleInputChange(e, "lastName")}
                   helperText={
                     errors.lastName
                       ? errors?.lastName.message
@@ -566,7 +580,7 @@ const NewUserComponent = () => {
                   type={attribteType}
                   {...register("password")}
                   error={!!errors?.password}
-                  onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleInputChange(e, "password")}
+                  //onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleInputChange(e, "password")}
                   helperText={
                     errors.password
                       ? errors?.password.message
@@ -586,7 +600,7 @@ const NewUserComponent = () => {
                           </Tooltip>
                           <IconButton
                             aria-label="toggle password visibility"
-                            onClick={handleClickShowPassword}
+                            onClick={resetForm}
                             edge="end"
                           >
                             {attribteType === 'text' ? (

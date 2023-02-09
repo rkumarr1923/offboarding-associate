@@ -44,3 +44,14 @@ export const NewUserValidationSchema = yup.object().shape({
         then: yup.string().required(`Please select ${UIConstants.selectManager}`)
     }),
 });
+
+export const newUserFormDefaultValues = {
+    employeeId: '',
+    email: '',
+    firstName: '',
+    lastName: '',
+    password: '',
+    roleId: '',
+    reviewerEmpId: '',
+    managerEmpId: '',
+}
