@@ -66,21 +66,26 @@ const NewUserComponent = () => {
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [attribteType, setAttribteType] = useState('password');
-  const [userRoleType, setUserRoleType] = useState('');
+  const [userRoleName, setUserRoleName] = useState('');
   const [openSnakBar, setSnakBarOpen] = useState(false);
 
 
   const isEmail = (email: any) =>
     /^[A-Z0-9._%+-]+@[IBM,ibm]+\.[COM,com]{2,4}$/i.test(email);
 
-  const getRoleName = (roleId: string) => {
-    allRole.filter((data: any) => {
-      if (data.id == roleId) {
-        return data.name;
+  // const getRoleName = (roleId: string) => {
+  //   allRole.filter((data: any) => {
+  //     if (data.id == roleId) {
+  //       return data.name;
 
-      }
-    })
-  };
+  //     }
+  //   })
+  // };
+
+  const getRoleName = (roleId: string) => {
+    return allRole.filter((data: any) => data.id == roleId)
+  }
+
 
   const assosiateRoleId = allRole.find((data: any) => {
     return data.name == 'ROLE_ASSOCIATE';
@@ -119,9 +124,8 @@ const NewUserComponent = () => {
 
   const handleUserDropdownChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
     // do something
-    setUserRoleType(e.target.value);
+    setUserRoleName(getRoleName(e.target.value)[0].name);
     // e.preventDefault();
-    // console.log(e.target.value);
   };
 
   const handleReviewerDropdownChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
@@ -730,7 +734,7 @@ const NewUserComponent = () => {
                 {/* {newUserDetails.role === assosiateRoleId?.id && allReviewer && ( */}
                 <>
 
-                  {userRoleType === "63bbedee42fd516ddaf2e7be" && (
+                  {userRoleName === "ROLE_ASSOCIATE" && (
                     <Dropdown
                       label={UIConstants.selectReviewer}
                       {...register("reviewerEmpId")}
@@ -787,8 +791,8 @@ const NewUserComponent = () => {
                   allManager && ( */}
                 <>
 
-                  {/* ---{userRoleType}--- */}
-                  {(userRoleType === "63885ca42c2a9f5a595f487a" || userRoleType === "63bbedee42fd516ddaf2e7be") && (
+                  {/* ---{userRoleName}--- */}
+                  {(userRoleName === "ROLE_ONBOARDING_REVIEWER" || userRoleName === "ROLE_ASSOCIATE") && (
                     <Dropdown
                       label={UIConstants.selectManager}
                       {...register("managerEmpId")}
