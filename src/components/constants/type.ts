@@ -42,6 +42,11 @@ export interface DropdownType {
     selectAnOption: boolean;
 }
 
+export interface DropdownIdName {
+    id: string;
+    name: string;
+}
+
 export interface TextareaType {
     label: string;
     autoFocus?: boolean;

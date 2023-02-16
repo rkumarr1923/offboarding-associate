@@ -18,7 +18,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Typography } from '@mui/material';
 import Button from '@mui/material/Button';
-import SelectBox from '../core/Select';
+// import SelectBox from '../core/Select';
 
 import './UploadDocument.css';
 import Loader from '../common/Loader';
