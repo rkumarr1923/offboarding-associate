@@ -17,26 +17,12 @@ import "./styles/app.css";
 import SampleDocuments from './components/document/SampleDocuments';
 import Offboarding from './views/Offboarding';
 import NewUserComponent from './components/user/NewUserComponent';
+import CommentComponent from './components/comment/CommentComponent';
+import OffBoardingCheckList from './components/associate-useful/Off-BoardingCheckList/OffBoardingCheckList';
 
 function App() {
   const user = useSelector(userDetails);
   return (
-    // <div className="App">
-    //   <header className="App-header">
-    //     <img src={logo} className="App-logo" alt="logo" />
-    //     <p>
-    //       Edit <code>src/App.tsx</code> and save to reload.
-    //     </p>
-    //     <a
-    //       className="App-link"
-    //       href="https://reactjs.org"
-    //       target="_blank"
-    //       rel="noopener noreferrer"
-    //     >
-    //       Learn React
-    //     </a>
-    //   </header>
-    // </div>
     <div className="app-container">
       <BrowserRouter>
         <Header />
@@ -49,6 +35,8 @@ function App() {
                 <Route path="uploadDocuments" element={<UploadDocument />} />
                 <Route path="sampleDocuments" element={<SampleDocuments />} />
                 <Route path="recording" element={<Recording />} />
+                <Route path="offboarding-checklist" element={<OffBoardingCheckList />} />
+                <Route path="comment" element={<CommentComponent />} />
               </>
             )}
             <Route path="auth/login" element={<LoginComponent />} />

@@ -50,6 +50,22 @@ export default function Offboarding() {
                   />
                 </Link>
               </li>
+              <li className={isTabActive('Off-Boarding checklist')}>
+                <Link to="/offboarding-checklist" state={{ forAssociate: { empId: user.empId } }}>
+                  <Button
+                    label="Off-Boarding checklist"
+                    clickHandler={() => tabClicked('Off-Boarding checklist')}
+                  />
+                </Link>
+              </li>
+              <li className={isTabActive('Comments')}>
+                <Link to="/comment">
+                  <Button
+                    label="Comments"
+                    clickHandler={() => tabClicked('Comments')}
+                  />
+                </Link>
+              </li>
             </>
           )}
         {user && user.role === 'ROLE_ASSOCIATE' && (
@@ -83,6 +99,14 @@ export default function Offboarding() {
                 <Button
                   label="Recordings"
                   clickHandler={() => tabClicked('Recordings')}
+                />
+              </Link>
+            </li>
+            <li className={isTabActive('Comments')}>
+              <Link to="/comment">
+                <Button
+                  label="Comments"
+                  clickHandler={() => tabClicked('Comments')}
                 />
               </Link>
             </li>
