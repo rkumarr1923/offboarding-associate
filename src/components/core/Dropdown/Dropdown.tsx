@@ -33,9 +33,9 @@ export const Dropdown: React.FC<any> = React.forwardRef(
                 <InputLabel id={name}>{label}</InputLabel>
                 <SelectInput {...selectDefaultProps} {...props} ref={ref}>
 
-                    {props.selectAnOption && (
+                    {props.selectanoption && (
                         <MenuItem value="">
-                            <em>{UIConstants.selectAnOption}</em>
+                            <em>{UIConstants.selectanoption}</em>
                         </MenuItem>
                     )}
 

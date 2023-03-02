@@ -2,7 +2,7 @@
 export const UIConstants = {
     selectAnAssociate: "Select an Associate",
     selectDocumentType: "Select Document Type",
-    selectAnOption: "Select an option",
+    selectanoption: "Select an option",
     isRequired: "is required",
     maxMessage: "Must be equal or less than",
     selectUser: "User Role",

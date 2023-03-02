@@ -688,7 +688,7 @@ const NewUserComponent = () => {
                       error={!!errors?.roleId}
                       onChange={handleUserDropdownChange}
                       options={mapAPItoUIDocTypeDropdown(allRole, 'id', 'name')}
-                      selectAnOption
+                      selectanoption
                       helperText={
                         errors.roleId
                           ? errors?.roleId.message
@@ -741,7 +741,7 @@ const NewUserComponent = () => {
                       error={!!errors?.reviewerEmpId}
                       onChange={handleReviewerDropdownChange}
                       options={mapAPItoUIDocTypeDropdown(allReviewer, 'empId', 'reviewerName')}
-                      selectAnOption
+                      selectanoption
                       helperText={
                         errors.reviewerEmpId
                           ? errors?.reviewerEmpId.message
@@ -799,7 +799,7 @@ const NewUserComponent = () => {
                       error={!!errors?.managerEmpId}
                       onChange={handleManagerDropdownChange}
                       options={mapAPItoUIDocTypeDropdown(allManager, 'empId', 'managerName')}
-                      selectAnOption
+                      selectanoption
                       helperText={
                         errors.managerEmpId
                           ? errors?.managerEmpId.message

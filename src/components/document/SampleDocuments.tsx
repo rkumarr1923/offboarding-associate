@@ -155,7 +155,7 @@ const SampleDocuments = () => {
         setUploadStatus(true);
         fetchDocuments();
         resetFields();
-        //console.log(result);
+        console.log(result);
       })
       .catch((error) => {
         setSnakBarOpen(true);

@@ -21,15 +21,27 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { Fragment, useState } from 'react';
+import { ChangeEvent, Fragment, SetStateAction, useState } from 'react';
 import moment from 'moment/moment.js';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { comments, userComments, userDetails, token } from '../../store';
+import { comments, userComments, userDetails, token, associateList } from '../../store';
 import Loader from '../common/Loader';
+import { Dropdown } from '../core/Dropdown/Dropdown';
+import { UIConstants } from '../constants/UIConstants';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { CommentValidationSchema } from '../document/FilterUploadDocument.validation';
+import { useForm } from 'react-hook-form';
+import { mapAPItoUIDocTypeDropdown } from '../../transformation/reponseMapper';
 
-const CommentComponent = (props) => {
+const CommentComponent = (props: any) => {
+  const BASE_URL = 'http://localhost:9003/';
+  const [options, setOptions] = useState<string[]>([]);
+  const [optionselect, setOptionselect] = useState('');
+  const [allAssoOptionSelect, setAllAssoOptionSelect] = useState('');
+
+
   const userToken = useSelector(token);
   const [open, setOpen] = useState(false);
   const [comment, setComment] = useState('');
@@ -39,8 +51,13 @@ const CommentComponent = (props) => {
   const allComments = useSelector(userComments);
   const empId = props.empId ? props.empId : user.empId;
   const [loader, setLoader] = useState(true);
+  const [associateName, setAssociateName] = useState();
+  const [ibmId, setIbmId] = useState('');
+  const [assocaiteList, setAssocaiteList] = useState<any>([]);
 
   useEffect(() => {
+    fetchDocumentTypes();
+    fetchAllAssociates();
     axios
       .get('http://localhost:9094/comment/' + empId, {
         headers: { Authorization: 'Bearer ' + userToken },
@@ -57,17 +74,55 @@ const CommentComponent = (props) => {
       }); // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [empId]);
 
+
+
+  const fetchDocumentTypes = () => {
+    const role = user.role;
+    console.log("role >>>>> " + role);
+    axios
+      .get(BASE_URL + 'document', { headers: { Authorization: 'Bearer ' + userToken } })
+      .then((res: any) => {
+        // console.log("res >>>>> "+JSON.stringify(res));
+        setOptions([...res.data]);
+        setOptionselect('1');
+        setLoader(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+
+  const fetchAllAssociates = () => {
+
+    axios
+      .get("http://localhost:9092/pru-associate/get-all-associates", { headers: { Authorization: 'Bearer ' + userToken } })
+      .then((result: any) => {
+        // console.log("result ==== >"+JSON.stringify(result));
+
+        setAssocaiteList([...result.data]);
+        setAllAssoOptionSelect('1');
+        setLoader(false);
+
+      });
+  }
+
+
   const handleClickOpen = () => {
     setError(false);
     setComment('');
     setOpen(true);
   };
 
+
+
   const handleClose = () => {
     setOpen(false);
   };
 
-  const convertDate = (date) => {
+
+
+  const convertDate = (date: any) => {
     let updatedDate = moment(new Date(date));
     return updatedDate.calendar(null, {
       lastWeek: '[Last] ddd hh:mm A',
@@ -83,9 +138,13 @@ const CommentComponent = (props) => {
     });
   };
 
-  const handleComment = (event) => {
+
+
+  const handleComment = (event: { target: { value: SetStateAction<string>; }; }) => {
     setComment(event.target.value);
   };
+
+
 
   const handleAddComments = () => {
     if (comment === null || comment === '') setError(true);
@@ -114,6 +173,38 @@ const CommentComponent = (props) => {
     }
   };
 
+
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    mode: 'all',
+    resolver: yupResolver(CommentValidationSchema),
+  })
+
+
+  const handleAssociateDropdownChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
+    // alert(e.target.value)
+    axios
+      .get('http://localhost:9094/comment/' + e.target.value, {
+        headers: { Authorization: 'Bearer ' + userToken },
+      })
+      .then((result) => {
+        if (result.data) {
+          dispatch(
+            comments({
+              comments: result.data,
+            })
+          );
+          setLoader(false);
+        }
+      }); // eslint-disable-next-line react-hooks/exhaustive-deps
+
+  }
+
+  const onSubmit = (data: any) => {
+    console.log("COMMENT PAGE DATA --->" + JSON.stringify(data))
+  }
+
+
+
   return (
     <div
       style={{
@@ -122,11 +213,93 @@ const CommentComponent = (props) => {
       }}
     >
       {props.empId ? <></> : <h2>Comment</h2>}
+
+
+
+      <Box mb={6}>
+        <div className="col-md-12 container">
+          <div className="col-md-4 flex-column">
+
+
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <>
+                <h2>Find Associate</h2>
+                <Grid item md={6} sm={6} xs={12}>
+                  <div className="section-border">
+                    <Dropdown
+                      label={UIConstants.selectAnAssociate}
+                      {...register("associateName")}
+                      error={!!errors?.associateName}
+                      onChange={handleAssociateDropdownChange}
+                      options={mapAPItoUIDocTypeDropdown(assocaiteList, 'ibmId', 'associateName')}
+                      selectanoption
+                      helperText={
+                        errors.associateName
+                          ? errors?.associateName?.message
+                          : null
+                      }
+                    />
+
+                  </div>
+                </Grid>
+
+              </>
+            </form>
+
+          </div>
+        </div>
+
+      </Box>
+
+      {/* <Box mb={6}>
+        <div className="col-md-12 container">
+          <div className="col-md-4 flex-column">
+
+
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <>
+                <h2>Find Associate</h2>
+                <Grid item md={6} sm={6} xs={12}>
+                  <div className="section-border">
+                    <Dropdown
+                      label={UIConstants.selectAnAssociate}
+                      {...register("associateName")}
+                      error={!!errors?.associateName}
+                      onChange={handleAssociateDropdownChange}
+                      options={mapAPItoUIDocTypeDropdown(assocaiteList, 'ibmId', 'associateName')}
+                      selectAnOption
+                      helperText={
+                        errors.associateName
+                          ? errors?.associateName.message
+                          : null
+                      }
+                    />
+
+                  </div>
+                </Grid>
+
+              </>
+            </form>
+
+          </div>
+        </div>
+
+      </Box> */}
+
+
+
+
+
+
+
+
+
+
       {loader ? (
         <Loader />
       ) : allComments.length !== 0 ? (
         <List style={{ overflow: 'auto', backgroundColor: 'white' }}>
-          {allComments.map((data, index) => {
+          {allComments.map((data: any, index: any) => {
             return (
               <Fragment key={`comments-${index}`}>
                 <ListItem alignItems="flex-start" key={index}>
@@ -188,7 +361,7 @@ const CommentComponent = (props) => {
                     secondary={
                       <Typography
                         sx={{ display: 'inline' }}
-                        variant="span"
+
                         color="black"
                       >
                         {data.comments}
@@ -196,7 +369,7 @@ const CommentComponent = (props) => {
                     }
                   />
                 </ListItem>
-                <Divider variant="li" />
+                <Divider />
               </Fragment>
             );
           })}

@@ -39,7 +39,7 @@ export interface DropdownType {
     onChange: any;
     helperText: any;
     options: Record<string, any>;
-    selectAnOption: boolean;
+    selectanoption: boolean;
 }
 
 export interface DropdownIdName {
