@@ -31,9 +31,10 @@ import Loader from '../common/Loader';
 import { Dropdown } from '../core/Dropdown/Dropdown';
 import { UIConstants } from '../constants/UIConstants';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { CommentValidationSchema } from '../document/FilterUploadDocument.validation';
+import { addCommentValidationSchema, CommentValidationSchema } from '../document/FilterUploadDocument.validation';
 import { useForm } from 'react-hook-form';
 import { mapAPItoUIDocTypeDropdown } from '../../transformation/reponseMapper';
+import { InputText } from '../core/InputText/InputText';
 
 const CommentComponent = (props: any) => {
   const BASE_URL = 'http://localhost:9003/';
@@ -49,7 +50,7 @@ const CommentComponent = (props: any) => {
   const dispatch = useDispatch();
   const user = useSelector(userDetails);
   const allComments = useSelector(userComments);
-  const empId = props.empId ? props.empId : user.empId;
+  const empId: any = props.empId ? props.empId : user.empId;
   const [loader, setLoader] = useState(true);
   const [associateName, setAssociateName] = useState();
   const [ibmId, setIbmId] = useState('');
@@ -179,6 +180,40 @@ const CommentComponent = (props: any) => {
     resolver: yupResolver(CommentValidationSchema),
   })
 
+  const cmtForm = useForm({
+    mode: 'all',
+    resolver: yupResolver(addCommentValidationSchema),
+  })
+  const cmtRegister = cmtForm.register;
+  const cmtHandleSubmit = cmtForm.handleSubmit;
+  const cmtErrors = cmtForm.formState.errors;
+
+  const saveComments = (data: any) => {
+    let updatedComments = {
+      empId: empId,
+      who: user.name,
+      role: user.role,
+      // comments: comment,
+      date: moment(new Date()).format(),
+    };
+    const reqData= {...data, ...updatedComments};
+    console.log("COMMENT SAVE DATA --->" + JSON.stringify(reqData))
+  
+    axios
+        .post('http://localhost:9094/comment/add-comment', reqData, {
+          headers: { Authorization: 'Bearer ' + userToken },
+        })
+        .then((result) => {
+          if (result.data)
+            dispatch(
+              comments({
+                comments: [result.data, ...allComments],
+              })
+            );
+        });
+     
+      setOpen(false);
+  }
 
   const handleAssociateDropdownChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
     // alert(e.target.value)
@@ -387,23 +422,47 @@ const CommentComponent = (props: any) => {
       </Tooltip>
       <Dialog open={open}>
         <DialogTitle>Add Comment</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Comment"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={comment}
-            onChange={handleComment}
-            error={error}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleAddComments}>Add</Button>
-        </DialogActions>
+
+        <form onSubmit={cmtHandleSubmit(saveComments)}>
+          <DialogContent>
+
+          <Dropdown
+              label={UIConstants.selectAnAssociate}
+              {...cmtRegister("ssssss")}
+              error={!!cmtErrors?.ssssss}
+              onChange={handleAssociateDropdownChange}
+              options={mapAPItoUIDocTypeDropdown(assocaiteList, 'ibmId', 'associateName')}
+              selectanoption
+              helperText={
+                cmtErrors.ssssss
+                  ? cmtErrors?.ssssss.message
+                  : null
+              }
+            />
+            <InputText
+              // autoFocus
+              label="Comment"
+              error={!!cmtErrors?.comments}
+              {...cmtRegister("comments")}
+              helperText={
+                cmtErrors.comments
+                  ? cmtErrors?.comments.message
+                  : null
+              }
+              // value={comment}
+              // onChange={handleComment}
+              // error={error}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button 
+              fullWidth
+              variant="contained"
+              className="login-btn"
+              type="submit">Add</Button>
+          </DialogActions>
+        </form>
       </Dialog>
     </div>
   );
