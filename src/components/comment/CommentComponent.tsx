@@ -147,32 +147,32 @@ const CommentComponent = (props: any) => {
 
 
 
-  const handleAddComments = () => {
-    if (comment === null || comment === '') setError(true);
-    else {
-      let updatedComments = {
-        empId: empId,
-        who: user.name,
-        role: user.role,
-        comments: comment,
-        date: moment(new Date()).format(),
-      };
-      axios
-        .post('http://localhost:9094/comment/add-comment', updatedComments, {
-          headers: { Authorization: 'Bearer ' + userToken },
-        })
-        .then((result) => {
-          if (result.data)
-            dispatch(
-              comments({
-                comments: [result.data, ...allComments],
-              })
-            );
-        });
-      setError(false);
-      setOpen(false);
-    }
-  };
+  // const handleAddComments = () => {
+  //   if (comment === null || comment === '') setError(true);
+  //   else {
+  //     let updatedComments = {
+  //       empId: empId,
+  //       who: user.name,
+  //       role: user.role,
+  //       comments: comment,
+  //       date: moment(new Date()).format(),
+  //     };
+  //     axios
+  //       .post('http://localhost:9094/comment/add-comment', updatedComments, {
+  //         headers: { Authorization: 'Bearer ' + userToken },
+  //       })
+  //       .then((result) => {
+  //         if (result.data)
+  //           dispatch(
+  //             comments({
+  //               comments: [result.data, ...allComments],
+  //             })
+  //           );
+  //       });
+  //     setError(false);
+  //     setOpen(false);
+  //   }
+  // };
 
 
   const { register, handleSubmit, formState: { errors } } = useForm({
@@ -187,6 +187,7 @@ const CommentComponent = (props: any) => {
   const cmtRegister = cmtForm.register;
   const cmtHandleSubmit = cmtForm.handleSubmit;
   const cmtErrors = cmtForm.formState.errors;
+  const cmtGetValues = cmtForm.getValues;
 
   const saveComments = (data: any) => {
     let updatedComments = {
@@ -216,8 +217,12 @@ const CommentComponent = (props: any) => {
   }
 
   const handleAssociateDropdownChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
-    // alert(e.target.value)
-    axios
+     // alert(cmtGetValues('comments'))
+     const onChangeValue= e.target.value;
+     Object.freeze(onChangeValue);
+
+     if(onChangeValue !== null && onChangeValue !== ''){
+      axios
       .get('http://localhost:9094/comment/' + e.target.value, {
         headers: { Authorization: 'Bearer ' + userToken },
       })
@@ -231,6 +236,14 @@ const CommentComponent = (props: any) => {
           setLoader(false);
         }
       }); // eslint-disable-next-line react-hooks/exhaustive-deps
+     }else{
+      dispatch(
+        comments({
+          comments: [],
+        })
+      );
+     }
+    
 
   }
 
@@ -266,7 +279,7 @@ const CommentComponent = (props: any) => {
                       {...register("associateName")}
                       error={!!errors?.associateName}
                       onChange={handleAssociateDropdownChange}
-                      options={mapAPItoUIDocTypeDropdown(assocaiteList, 'ibmId', 'associateName')}
+                      options={mapAPItoUIDocTypeDropdown(assocaiteList, 'associateId', 'associateName')}
                       selectanoption
                       helperText={
                         errors.associateName
