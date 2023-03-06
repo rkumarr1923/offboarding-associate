@@ -31,10 +31,10 @@ import Loader from '../common/Loader';
 import { Dropdown } from '../core/Dropdown/Dropdown';
 import { UIConstants } from '../constants/UIConstants';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { addCommentValidationSchema, CommentValidationSchema } from '../document/FilterUploadDocument.validation';
 import { useForm } from 'react-hook-form';
 import { mapAPItoUIDocTypeDropdown } from '../../transformation/reponseMapper';
 import { InputText } from '../core/InputText/InputText';
+import { CommentValidationSchema, addCommentValidationSchema, addCommentDefaultValues } from './Comment.validation';
 
 const CommentComponent = (props: any) => {
   const BASE_URL = 'http://localhost:9003/';
@@ -119,6 +119,7 @@ const CommentComponent = (props: any) => {
 
   const handleClose = () => {
     setOpen(false);
+    cmtReset(addCommentDefaultValues);
   };
 
 
@@ -188,10 +189,11 @@ const CommentComponent = (props: any) => {
   const cmtHandleSubmit = cmtForm.handleSubmit;
   const cmtErrors = cmtForm.formState.errors;
   const cmtGetValues = cmtForm.getValues;
+  const cmtReset = cmtForm.reset;
 
   const saveComments = (data: any) => {
     let updatedComments = {
-      empId: empId,
+      // empId: empId,
       who: user.name,
       role: user.role,
       // comments: comment,
@@ -205,12 +207,14 @@ const CommentComponent = (props: any) => {
           headers: { Authorization: 'Bearer ' + userToken },
         })
         .then((result) => {
-          if (result.data)
-            dispatch(
-              comments({
-                comments: [result.data, ...allComments],
-              })
-            );
+          cmtReset(addCommentDefaultValues);
+
+          // if (result.data)
+          //   dispatch(
+          //     comments({
+          //       comments: [result.data, ...allComments],
+          //     })
+          //   );
         });
      
       setOpen(false);
@@ -243,7 +247,11 @@ const CommentComponent = (props: any) => {
         })
       );
      }
-    
+  }
+
+
+
+  const handleNewCommentDropdownChange=(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string)=>{
 
   }
 
@@ -441,14 +449,14 @@ const CommentComponent = (props: any) => {
 
           <Dropdown
               label={UIConstants.selectAnAssociate}
-              {...cmtRegister("ssssss")}
-              error={!!cmtErrors?.ssssss}
-              onChange={handleAssociateDropdownChange}
-              options={mapAPItoUIDocTypeDropdown(assocaiteList, 'ibmId', 'associateName')}
+              {...cmtRegister("empId")}
+              error={!!cmtErrors?.empId}
+              onChange={handleNewCommentDropdownChange}
+              options={mapAPItoUIDocTypeDropdown(assocaiteList, 'associateId', 'associateName')}
               selectanoption
               helperText={
-                cmtErrors.ssssss
-                  ? cmtErrors?.ssssss.message
+                cmtErrors.empId
+                  ? cmtErrors?.empId.message
                   : null
               }
             />

@@ -10,6 +10,8 @@ export type LoginResponse = {
         role: string,
         email: string,
         name: string,
+        firstName: string,
+        lastName: string,
         userId: string,
         associateName?: string,
         associateRole?: string,

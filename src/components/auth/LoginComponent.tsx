@@ -52,6 +52,8 @@ const LoginComponent = () => {
               token: result.data.token,
               userDetails: {
                 name: result.data.name,
+                firstName: result.data.firstName,
+                lastName: result.data.lastName,
                 role: result.data.role,
                 reviewer: result.data.reviewer,
                 manager: result.data.manager,
