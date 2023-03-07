@@ -15,7 +15,7 @@ const Header = () => {
     dispatch(logout());
     dispatch(tabSelected("Default"));
   };
-console.log("user >>>"+JSON.stringify(user))
+
   const handleRefresh = () => {
     dispatch(tabSelected("Default"));
   };
