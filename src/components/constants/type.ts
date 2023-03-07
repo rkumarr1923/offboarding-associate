@@ -41,7 +41,7 @@ export interface DropdownType {
     onChange: any;
     helperText: any;
     options: Record<string, any>;
-    selectanoption: boolean;
+    selectAnOption: boolean;
 }
 
 export interface DropdownIdName {

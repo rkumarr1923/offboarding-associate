@@ -315,7 +315,7 @@ const CommentComponent = (props: any) => {
                       error={!!errors?.associateName}
                       onChange={handleAssociateDropdownChange}
                       options={mapAPItoUIDocTypeDropdown(assocaiteList, 'associateId', 'associateName')}
-                      selectanoption
+                      selectAnOption
                       helperText={
                         errors.associateName
                           ? errors?.associateName?.message
@@ -485,7 +485,7 @@ const CommentComponent = (props: any) => {
               error={!!cmtErrors?.empId}
               onChange={handleNewCommentDropdownChange}
               options={mapAPItoUIDocTypeDropdown(assocaiteList, 'associateId', 'associateName')}
-              selectanoption
+              selectAnOption
               helperText={
                 cmtErrors.empId
                   ? cmtErrors?.empId.message
