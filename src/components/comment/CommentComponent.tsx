@@ -176,7 +176,7 @@ const CommentComponent = (props: any) => {
   // };
 
 
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const { register, handleSubmit, getValues, formState: { errors } } = useForm({
     mode: 'all',
     resolver: yupResolver(CommentValidationSchema),
   })
@@ -192,9 +192,10 @@ const CommentComponent = (props: any) => {
   const cmtReset = cmtForm.reset;
 
   const saveComments = (data: any) => {
+    const fullName = user.firstName + user.lastName;
     let updatedComments = {
       // empId: empId,
-      who: user.name,
+      who: fullName,
       role: user.role,
       // comments: comment,
       date: moment(new Date()).format(),
@@ -208,7 +209,7 @@ const CommentComponent = (props: any) => {
         })
         .then((result) => {
           cmtReset(addCommentDefaultValues);
-
+          callOnchangeAPI(getValues('associateName'));
           // if (result.data)
           //   dispatch(
           //     comments({
@@ -220,14 +221,10 @@ const CommentComponent = (props: any) => {
       setOpen(false);
   }
 
-  const handleAssociateDropdownChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
-     // alert(cmtGetValues('comments'))
-     const onChangeValue= e.target.value;
-     Object.freeze(onChangeValue);
-
-     if(onChangeValue !== null && onChangeValue !== ''){
+  const callOnchangeAPI = (value: string) =>{
+      if(value !== null && value !== ''){
       axios
-      .get('http://localhost:9094/comment/' + e.target.value, {
+      .get('http://localhost:9094/comment/' + value, {
         headers: { Authorization: 'Bearer ' + userToken },
       })
       .then((result) => {
@@ -247,6 +244,36 @@ const CommentComponent = (props: any) => {
         })
       );
      }
+     }
+
+  const handleAssociateDropdownChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type: string) => {
+     // alert(cmtGetValues('comments'))
+     const onChangeValue= e.target.value;
+     Object.freeze(onChangeValue);
+
+     callOnchangeAPI(onChangeValue);
+    //  if(onChangeValue !== null && onChangeValue !== ''){
+    //   axios
+    //   .get('http://localhost:9094/comment/' + e.target.value, {
+    //     headers: { Authorization: 'Bearer ' + userToken },
+    //   })
+    //   .then((result) => {
+    //     if (result.data) {
+    //       dispatch(
+    //         comments({
+    //           comments: result.data,
+    //         })
+    //       );
+    //       setLoader(false);
+    //     }
+    //   }); // eslint-disable-next-line react-hooks/exhaustive-deps
+    //  }else{
+    //   dispatch(
+    //     comments({
+    //       comments: [],
+    //     })
+    //   );
+    //  }
   }
 
 
@@ -399,11 +426,15 @@ const CommentComponent = (props: any) => {
                                             style={{ fontSize: 13 }}
                                           />
                                         )}
+                                        
                                       </Tooltip>
+                                      
                                     </Grid>
+                                    
                                   </Grid>
                                 </>
                               )}
+                              
                             </Grid>
                             <Grid item xs={6} style={{ textAlign: 'end' }}>
                               <span style={{ fontSize: '10px' }}>
@@ -411,6 +442,7 @@ const CommentComponent = (props: any) => {
                               </span>
                             </Grid>
                           </Grid>
+                          
                         </Typography>
                       </>
                     }

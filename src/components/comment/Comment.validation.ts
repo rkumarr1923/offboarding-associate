@@ -7,7 +7,7 @@ export const CommentValidationSchema = yup.object().shape({
 });
 
 export const addCommentValidationSchema = yup.object().shape({
-    empId: yup.string().required("XXXXXXXXXXXXXXX"),
+    empId: yup.string().required("Please select an Associate"),
     comments: yup.string().required("Please provide comments"),
     
 });
